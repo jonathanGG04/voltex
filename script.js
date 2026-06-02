@@ -1,0 +1,1 @@
+console.log("Sitio web de Voltex Innovations PA cargado correctamente.");
