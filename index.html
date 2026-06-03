@@ -3,10 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Voltex Innovations PA</title>
+
+  <title>Voltex Innovations PA | Soluciones eléctricas y solares en Panamá</title>
+
+  <meta
+    name="description"
+    content="Voltex Innovations PA ofrece soluciones eléctricas residenciales, industriales, paneles solares, mantenimiento de transformadores, tableros eléctricos y servicios energéticos especializados en Panamá."
+  />
+
+  <meta
+    name="keywords"
+    content="Voltex Innovations PA, instalaciones eléctricas Panamá, paneles solares Panamá, mantenimiento de transformadores, tableros eléctricos, energía solar, servicios eléctricos residenciales, servicios eléctricos industriales"
+  />
+
+  <meta name="author" content="Voltex Innovations PA" />
+
+  <!-- Vista previa al compartir en WhatsApp, Facebook o redes sociales -->
+  <meta property="og:title" content="Voltex Innovations PA" />
+  <meta
+    property="og:description"
+    content="Soluciones eléctricas, solares e industriales enfocadas en seguridad, eficiencia energética e innovación."
+  />
+  <meta property="og:image" content="img/preview.jpg" />
+  <meta property="og:type" content="website" />
+
+  <!-- Ícono de la pestaña del navegador -->
+  <link rel="icon" type="image/png" href="img/favicon.png" />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
 
   <!-- ENCABEZADO -->
@@ -15,12 +41,19 @@
       <span>Voltex</span> Innovations PA
     </div>
 
-    <nav class="nav">
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Abrir menú">
+      ☰
+    </button>
+
+    <nav class="nav" id="nav">
       <a href="#inicio">Inicio</a>
       <a href="#nosotros">Nosotros</a>
       <a href="#servicios">Servicios</a>
+      <a href="#proceso">Proceso</a>
       <a href="#proyectos">Proyectos</a>
+      <a href="#blog">Blog</a>
       <a href="#contacto">Contacto</a>
+      <a href="#cotizacion" class="nav-cta">Cotizar</a>
     </nav>
   </header>
 
@@ -36,7 +69,7 @@
       </p>
 
       <div class="hero-buttons">
-        <a href="#contacto" class="btn primary">Solicitar cotización</a>
+        <a href="#cotizacion" class="btn primary">Solicitar cotización</a>
         <a href="#servicios" class="btn secondary">Ver servicios</a>
       </div>
     </div>
@@ -51,42 +84,198 @@
       modernas, seguras y eficientes, integrando ingeniería, tecnología e innovación
       para proyectos residenciales, comerciales e industriales.
     </p>
+
+    <div class="about-grid">
+      <div class="about-box">
+        <h3>Misión</h3>
+        <p>
+          Brindar soluciones eléctricas y energéticas confiables, seguras y adaptadas
+          a las necesidades de cada cliente.
+        </p>
+      </div>
+
+      <div class="about-box">
+        <h3>Visión</h3>
+        <p>
+          Ser una empresa referente en Panamá en servicios eléctricos, energía solar,
+          mantenimiento industrial e innovación energética.
+        </p>
+      </div>
+
+      <div class="about-box">
+        <h3>Enfoque</h3>
+        <p>
+          Trabajamos con criterio técnico, responsabilidad, seguridad y compromiso
+          con la eficiencia energética.
+        </p>
+      </div>
+    </div>
   </section>
 
   <!-- SERVICIOS -->
   <section id="servicios" class="section gray">
     <h2>Servicios</h2>
 
+    <p>
+      Ofrecemos soluciones eléctricas, solares e industriales enfocadas en seguridad,
+      eficiencia energética e innovación tecnológica.
+    </p>
+
     <div class="cards">
       <div class="card">
-        <h3>Instalaciones eléctricas</h3>
+        <h3>Instalaciones residenciales</h3>
         <p>
-          Diseño, instalación y mantenimiento de sistemas eléctricos residenciales,
-          comerciales e industriales.
+          Instalación, ampliación y mantenimiento de sistemas eléctricos para viviendas,
+          apartamentos y residencias.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Instalaciones industriales</h3>
+        <p>
+          Soluciones eléctricas para industrias, comercios, talleres, galeras y sistemas
+          de distribución de potencia.
         </p>
       </div>
 
       <div class="card">
         <h3>Paneles solares</h3>
         <p>
-          Instalación de sistemas fotovoltaicos para ahorro energético y uso de
-          energías renovables.
+          Diseño e instalación de sistemas solares fotovoltaicos para ahorro energético
+          y uso de energías renovables.
         </p>
       </div>
 
       <div class="card">
-        <h3>Mantenimiento industrial</h3>
+        <h3>Mantenimiento de transformadores</h3>
         <p>
-          Mantenimiento de transformadores, tableros eléctricos, sistemas de potencia
-          y equipos especializados.
+          Inspección, mantenimiento preventivo y correctivo de transformadores eléctricos
+          y equipos asociados.
         </p>
       </div>
 
       <div class="card">
-        <h3>Soluciones energéticas</h3>
+        <h3>Tableros eléctricos</h3>
         <p>
-          Evaluación, mejora y optimización de sistemas eléctricos para mayor
-          eficiencia, seguridad y confiabilidad.
+          Instalación, revisión, mantenimiento y adecuación de tableros eléctricos,
+          protecciones y circuitos.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Sistemas de puesta a tierra</h3>
+        <p>
+          Evaluación e instalación de sistemas de puesta a tierra para mejorar la
+          seguridad eléctrica de las instalaciones.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Estudios de carga</h3>
+        <p>
+          Análisis de demanda eléctrica, balance de cargas, capacidad de tableros y
+          recomendaciones técnicas.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Mantenimiento preventivo</h3>
+        <p>
+          Revisión periódica de instalaciones eléctricas para reducir fallas, riesgos
+          y paros no programados.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- POR QUÉ ELEGIRNOS -->
+  <section class="section why-us">
+    <h2>¿Por qué elegir Voltex?</h2>
+
+    <p>
+      Combinamos conocimiento técnico, seguridad eléctrica e innovación para ofrecer
+      soluciones confiables en proyectos residenciales, comerciales e industriales.
+    </p>
+
+    <div class="why-grid">
+      <div class="why-card">
+        <h3>Seguridad eléctrica</h3>
+        <p>
+          Trabajamos considerando criterios técnicos, protección de equipos y reducción
+          de riesgos eléctricos.
+        </p>
+      </div>
+
+      <div class="why-card">
+        <h3>Soluciones especializadas</h3>
+        <p>
+          Atendemos instalaciones eléctricas, sistemas solares, mantenimiento de
+          transformadores y proyectos industriales.
+        </p>
+      </div>
+
+      <div class="why-card">
+        <h3>Eficiencia energética</h3>
+        <p>
+          Proponemos mejoras para optimizar el consumo eléctrico y aprovechar energías
+          renovables.
+        </p>
+      </div>
+
+      <div class="why-card">
+        <h3>Enfoque profesional</h3>
+        <p>
+          Cada proyecto se analiza según sus necesidades, carga eléctrica, seguridad y
+          condiciones de operación.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESO DE TRABAJO -->
+  <section id="proceso" class="section process-section">
+    <h2>Nuestro proceso de trabajo</h2>
+
+    <p>
+      En Voltex Innovations PA trabajamos cada proyecto bajo un proceso organizado,
+      técnico y orientado a la seguridad, desde la evaluación inicial hasta la entrega
+      de la solución final.
+    </p>
+
+    <div class="process-grid">
+      <div class="process-card">
+        <span>01</span>
+        <h3>Evaluación inicial</h3>
+        <p>
+          Analizamos las necesidades del cliente, el tipo de instalación, las cargas
+          eléctricas y las condiciones del sitio.
+        </p>
+      </div>
+
+      <div class="process-card">
+        <span>02</span>
+        <h3>Propuesta técnica</h3>
+        <p>
+          Se plantea una solución eléctrica, solar o industrial adaptada al proyecto,
+          considerando seguridad, eficiencia y viabilidad.
+        </p>
+      </div>
+
+      <div class="process-card">
+        <span>03</span>
+        <h3>Ejecución del trabajo</h3>
+        <p>
+          Realizamos la instalación, mantenimiento o adecuación siguiendo criterios
+          técnicos y buenas prácticas de ingeniería.
+        </p>
+      </div>
+
+      <div class="process-card">
+        <span>04</span>
+        <h3>Entrega y seguimiento</h3>
+        <p>
+          Verificamos el funcionamiento del sistema, entregamos recomendaciones y
+          ofrecemos seguimiento según las necesidades del cliente.
         </p>
       </div>
     </div>
@@ -97,36 +286,205 @@
     <h2>Proyectos</h2>
 
     <p>
-      En esta sección se mostrarán proyectos realizados por Voltex Innovations PA,
-      incluyendo instalaciones eléctricas, sistemas solares, mantenimiento de equipos
-      y soluciones industriales.
+      Presentamos algunos tipos de trabajos que forman parte del enfoque de Voltex
+      Innovations PA en soluciones eléctricas, solares e industriales.
     </p>
 
-    <div class="project-box">
-      <p>Próximamente: galería de proyectos.</p>
+    <div class="projects-gallery">
+      <div class="gallery-card">
+        <img src="img/proyecto1.jpg" alt="Instalación eléctrica residencial o comercial" />
+
+        <div class="gallery-content">
+          <h3>Instalaciones eléctricas</h3>
+          <p>
+            Desarrollo, adecuación y mantenimiento de instalaciones eléctricas para
+            espacios residenciales, comerciales e industriales.
+          </p>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <img src="img/proyecto2.jpg" alt="Sistema de paneles solares" />
+
+        <div class="gallery-content">
+          <h3>Sistemas solares</h3>
+          <p>
+            Instalación de sistemas fotovoltaicos orientados al ahorro energético y al
+            aprovechamiento de energías renovables.
+          </p>
+        </div>
+      </div>
+
+      <div class="gallery-card">
+        <img src="img/proyecto3.jpg" alt="Mantenimiento eléctrico industrial" />
+
+        <div class="gallery-content">
+          <h3>Mantenimiento industrial</h3>
+          <p>
+            Revisión de tableros, transformadores, protecciones eléctricas y equipos
+            asociados a sistemas de potencia.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section id="blog" class="section gray">
+    <h2>Blog</h2>
+
+    <p>
+      Próximamente compartiremos contenido sobre ahorro energético, seguridad eléctrica,
+      paneles solares, mantenimiento preventivo y soluciones eléctricas para hogares,
+      comercios e industrias.
+    </p>
+  </section>
+
+  <!-- COTIZACIÓN -->
+  <section id="cotizacion" class="section cotizacion">
+    <h2>Solicita una cotización</h2>
+
+    <p>
+      Completa la información básica de tu proyecto y te contactaremos para evaluar
+      la solución eléctrica, solar o industrial que necesitas.
+    </p>
+
+    <div class="quote-container">
+      <form class="quote-form" id="quote-form">
+        <div class="form-group">
+          <label for="nombre">Nombre completo</label>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            placeholder="Ejemplo: Juan Pérez"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="servicio">Tipo de servicio</label>
+          <select id="servicio" name="servicio" required>
+            <option value="">Selecciona un servicio</option>
+            <option value="Instalación eléctrica residencial">Instalación eléctrica residencial</option>
+            <option value="Instalación eléctrica industrial">Instalación eléctrica industrial</option>
+            <option value="Paneles solares">Paneles solares</option>
+            <option value="Mantenimiento de transformadores">Mantenimiento de transformadores</option>
+            <option value="Tableros eléctricos">Tableros eléctricos</option>
+            <option value="Sistema de puesta a tierra">Sistema de puesta a tierra</option>
+            <option value="Estudio de carga">Estudio de carga</option>
+            <option value="Mantenimiento preventivo">Mantenimiento preventivo</option>
+            <option value="Otro servicio">Otro servicio</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="ubicacion">Ubicación del proyecto</label>
+          <input
+            type="text"
+            id="ubicacion"
+            name="ubicacion"
+            placeholder="Ejemplo: Panamá Oeste, Chitré, David..."
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion">Descripción del trabajo</label>
+          <textarea
+            id="descripcion"
+            name="descripcion"
+            rows="5"
+            placeholder="Describe brevemente el trabajo que necesitas..."
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn primary">
+          Enviar solicitud por WhatsApp
+        </button>
+      </form>
+
+      <div class="quote-info">
+        <h3>¿Qué puedes solicitar?</h3>
+
+        <ul>
+          <li>Instalaciones eléctricas nuevas o remodelaciones.</li>
+          <li>Evaluación para sistemas solares fotovoltaicos.</li>
+          <li>Mantenimiento de tableros, transformadores y sistemas eléctricos.</li>
+          <li>Diagnóstico de fallas, cargas eléctricas y mejoras de seguridad.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <!-- CONTACTO -->
   <section id="contacto" class="section contacto">
-    <h2>Solicita una cotización</h2>
+    <h2>Contacto</h2>
 
     <p>
-      Contáctanos para evaluar tu proyecto eléctrico, solar o industrial.
+      Estamos disponibles para atender proyectos residenciales, comerciales e industriales
+      en todo Panamá.
     </p>
 
-    <a 
-      href="https://wa.me/507XXXXXXXX" 
-      target="_blank" 
-      class="btn primary"
-    >
-      Escribir por WhatsApp
-    </a>
+    <div class="contact-info">
+      <p><strong>WhatsApp:</strong> +507 6338-9243</p>
+      <p><strong>Empresa:</strong> Voltex Innovations PA</p>
+      <p><strong>Servicios:</strong> electricidad, energía solar, mantenimiento e innovación.</p>
+    </div>
   </section>
+
+  <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+  <a
+    href="https://wa.me/50763389243"
+    class="whatsapp-float"
+    target="_blank"
+  >
+    WhatsApp
+  </a>
 
   <!-- PIE DE PÁGINA -->
   <footer class="footer">
-    <p>© 2026 Voltex Innovations PA. Todos los derechos reservados.</p>
+    <div class="footer-content">
+      <div class="footer-box">
+        <h3><span>Voltex</span> Innovations PA</h3>
+        <p>
+          Soluciones eléctricas, solares e industriales enfocadas en seguridad,
+          eficiencia energética e innovación.
+        </p>
+      </div>
+
+      <div class="footer-box">
+        <h4>Enlaces rápidos</h4>
+        <a href="#inicio">Inicio</a>
+        <a href="#nosotros">Nosotros</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#proceso">Proceso</a>
+        <a href="#proyectos">Proyectos</a>
+        <a href="#cotizacion">Cotización</a>
+      </div>
+
+      <div class="footer-box">
+        <h4>Servicios</h4>
+        <p>Instalaciones eléctricas</p>
+        <p>Paneles solares</p>
+        <p>Mantenimiento industrial</p>
+        <p>Transformadores y tableros</p>
+      </div>
+
+      <div class="footer-box">
+        <h4>Contacto</h4>
+        <p>WhatsApp: +507 6338-9243</p>
+        <p>Panamá</p>
+        <a href="https://wa.me/50763389243" target="_blank">
+          Solicitar cotización
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 Voltex Innovations PA. Todos los derechos reservados.</p>
+    </div>
   </footer>
 
   <script src="script.js"></script>
