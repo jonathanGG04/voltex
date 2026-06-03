@@ -714,3 +714,93 @@ section {
     padding: 45px 6% 20px;
   }
 }
+/* CALCULADORA SOLAR */
+.solar-calculator-section {
+  background-color: white;
+}
+
+.solar-calculator-container {
+  margin-top: 35px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 35px;
+  align-items: start;
+}
+
+.solar-form {
+  background-color: #f4f7fa;
+  padding: 30px;
+  border-radius: 14px;
+  text-align: left;
+  border-left: 5px solid #00c8ff;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+.solar-form small {
+  display: block;
+  margin-top: 6px;
+  color: #666;
+  font-size: 13px;
+}
+
+.solar-results {
+  background-color: #081c2f;
+  color: white;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.18);
+}
+
+.solar-results h3 {
+  font-size: 26px;
+  margin-bottom: 22px;
+  color: white;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.result-item span {
+  color: #d6d6d6;
+}
+
+.result-item strong {
+  color: #00c8ff;
+  text-align: right;
+}
+
+.solar-note {
+  margin-top: 22px;
+  color: #e8e8e8;
+  font-size: 14px;
+}
+
+.solar-whatsapp-btn {
+  margin-top: 20px;
+  border-color: #00c8ff;
+  color: white;
+}
+
+.solar-whatsapp-btn:hover {
+  background-color: #00c8ff;
+  color: #081c2f;
+}
+
+@media (max-width: 900px) {
+  .solar-calculator-container {
+    grid-template-columns: 1fr;
+  }
+
+  .result-item {
+    flex-direction: column;
+  }
+
+  .result-item strong {
+    text-align: left;
+  }
+}

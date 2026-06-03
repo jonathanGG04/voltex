@@ -187,7 +187,7 @@
       </div>
     </div>
   </section>
-
+<a href="#calculadora-solar">Calculadora</a>
   <!-- POR QUÉ ELEGIRNOS -->
   <section class="section why-us">
     <h2>¿Por qué elegir Voltex?</h2>
@@ -339,7 +339,145 @@
       comercios e industrias.
     </p>
   </section>
+<!-- CALCULADORA SOLAR -->
+<section id="calculadora-solar" class="section solar-calculator-section">
+  <h2>Calculadora solar estimada</h2>
 
+  <p>
+    Calcula de forma preliminar cuántos paneles solares podría necesitar tu vivienda
+    y cuánto podrías ahorrar mensualmente según tu consumo eléctrico.
+  </p>
+
+  <div class="solar-calculator-container">
+    <form id="solar-calculator-form" class="solar-form">
+      <div class="form-group">
+        <label for="consumo-kwh">Consumo mensual</label>
+        <input
+          type="number"
+          id="consumo-kwh"
+          placeholder="Ejemplo: 600"
+          min="1"
+          required
+        />
+        <small>Ingresa el consumo mensual en kWh según tu factura.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="factura-mensual">Monto mensual de la factura</label>
+        <input
+          type="number"
+          id="factura-mensual"
+          placeholder="Ejemplo: 120"
+          min="1"
+          step="0.01"
+          required
+        />
+        <small>Ingresa el monto aproximado en balboas.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="cobertura-solar">
+          Porcentaje que deseas cubrir: <span id="cobertura-valor">80%</span>
+        </label>
+        <input
+          type="range"
+          id="cobertura-solar"
+          min="30"
+          max="100"
+          value="80"
+          step="5"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="potencia-panel">Potencia del panel</label>
+        <select id="potencia-panel">
+          <option value="550">550 W</option>
+          <option value="580">580 W</option>
+          <option value="600">600 W</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="horas-sol">Horas solares pico</label>
+        <input
+          type="number"
+          id="horas-sol"
+          value="4.5"
+          min="3"
+          max="6"
+          step="0.1"
+        />
+        <small>Para Panamá se puede usar 4.0 a 4.5 como estimación inicial.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="eficiencia-sistema">Eficiencia del sistema</label>
+        <input
+          type="number"
+          id="eficiencia-sistema"
+          value="80"
+          min="60"
+          max="95"
+          step="1"
+        />
+        <small>Incluye pérdidas por temperatura, inversor, cables, suciedad y orientación.</small>
+      </div>
+
+      <button type="submit" class="btn primary">
+        Calcular sistema solar
+      </button>
+    </form>
+
+    <div class="solar-results" id="solar-results">
+      <h3>Resultado estimado</h3>
+
+      <div class="result-item">
+        <span>Sistema recomendado:</span>
+        <strong id="resultado-kwp">-- kWp</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Cantidad de paneles:</span>
+        <strong id="resultado-paneles">--</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Generación mensual:</span>
+        <strong id="resultado-generacion">-- kWh/mes</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Ahorro mensual estimado:</span>
+        <strong id="resultado-ahorro-mensual">B/. --</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Ahorro anual estimado:</span>
+        <strong id="resultado-ahorro-anual">B/. --</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Área aproximada requerida:</span>
+        <strong id="resultado-area">-- m²</strong>
+      </div>
+
+      <p class="solar-note">
+        Esta estimación es preliminar. La cotización final depende de la ubicación,
+        tipo de techo, sombras, estructura, protecciones, inversor y visita técnica.
+      </p>
+
+      <a
+        id="solar-whatsapp"
+        class="btn secondary solar-whatsapp-btn"
+        href="#"
+        target="_blank"
+      >
+        Enviar resultado a Voltex
+      </a>
+    </div>
+  </div>
+</section>
   <!-- COTIZACIÓN -->
   <section id="cotizacion" class="section cotizacion">
     <h2>Solicita una cotización</h2>
