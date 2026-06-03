@@ -804,3 +804,7 @@ section {
     text-align: left;
   }
 }
+/* Corrige enlace suelto de calculadora fuera del menú */
+body > a[href="#calculadora-solar"] {
+  display: none !important;
+}
