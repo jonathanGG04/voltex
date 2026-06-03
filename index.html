@@ -341,146 +341,298 @@
     </p>
   </section>
 
-  <!-- CALCULADORA SOLAR - VERSION ACTUALIZADA -->
-  <section id="calculadora-solar" class="section solar-calculator-section">
-    <h2>Calculadora solar estimada</h2>
 
-    <p>
-      Calcula de forma preliminar cuántos paneles solares podría necesitar tu vivienda
-      y cuánto podrías ahorrar mensualmente según tu consumo eléctrico.
-    </p>
+<!-- CALCULADORA SOLAR -->
+<section id="calculadora-solar" class="section solar-calculator-section">
+  <h2>Calculadora solar estimada</h2>
 
-    <div class="solar-calculator-container">
-      <form id="solar-calculator-form" class="solar-form">
-        <div class="form-group">
-          <label for="consumo-kwh">Consumo mensual</label>
-          <input
-            type="number"
-            id="consumo-kwh"
-            placeholder="Ejemplo: 600"
-            min="1"
-            required
-          />
-          <small>Ingresa el consumo mensual en kWh según tu factura.</small>
-        </div>
+  <p>
+    Calcula de forma preliminar el tamaño de tu sistema solar, cantidad de paneles,
+    ahorro mensual estimado e inversión aproximada instalada.
+  </p>
 
-        <div class="form-group">
-          <label for="factura-mensual">Monto mensual de la factura</label>
-          <input
-            type="number"
-            id="factura-mensual"
-            placeholder="Ejemplo: 120"
-            min="1"
-            step="0.01"
-            required
-          />
-          <small>Ingresa el monto aproximado en balboas.</small>
-        </div>
+  <div class="solar-calculator-container">
+    <form id="solar-calculator-form" class="solar-form">
 
-        <div class="form-group">
-          <label for="cobertura-solar">
-            Porcentaje que deseas cubrir: <span id="cobertura-valor">80%</span>
-          </label>
-          <input
-            type="range"
-            id="cobertura-solar"
-            min="30"
-            max="100"
-            value="80"
-            step="5"
-          />
-        </div>
+      <h3>Datos del cliente</h3>
 
-        <div class="form-group">
-          <label for="potencia-panel">Potencia del panel</label>
-          <select id="potencia-panel">
-            <option value="550">550 W</option>
-            <option value="580">580 W</option>
-            <option value="600">600 W</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="horas-sol">Horas solares pico</label>
-          <input
-            type="number"
-            id="horas-sol"
-            value="4.5"
-            min="3"
-            max="6"
-            step="0.1"
-          />
-          <small>Para Panamá se puede usar 4.0 a 4.5 como estimación inicial.</small>
-        </div>
-
-        <div class="form-group">
-          <label for="eficiencia-sistema">Eficiencia del sistema</label>
-          <input
-            type="number"
-            id="eficiencia-sistema"
-            value="80"
-            min="60"
-            max="95"
-            step="1"
-          />
-          <small>Incluye pérdidas por temperatura, inversor, cables, suciedad y orientación.</small>
-        </div>
-
-        <button type="submit" class="btn primary">
-          Calcular sistema solar
-        </button>
-      </form>
-
-      <div class="solar-results" id="solar-results">
-        <h3>Resultado estimado</h3>
-
-        <div class="result-item">
-          <span>Sistema recomendado:</span>
-          <strong id="resultado-kwp">-- kWp</strong>
-        </div>
-
-        <div class="result-item">
-          <span>Cantidad de paneles:</span>
-          <strong id="resultado-paneles">--</strong>
-        </div>
-
-        <div class="result-item">
-          <span>Generación mensual:</span>
-          <strong id="resultado-generacion">-- kWh/mes</strong>
-        </div>
-
-        <div class="result-item">
-          <span>Ahorro mensual estimado:</span>
-          <strong id="resultado-ahorro-mensual">B/. --</strong>
-        </div>
-
-        <div class="result-item">
-          <span>Ahorro anual estimado:</span>
-          <strong id="resultado-ahorro-anual">B/. --</strong>
-        </div>
-
-        <div class="result-item">
-          <span>Área aproximada requerida:</span>
-          <strong id="resultado-area">-- m²</strong>
-        </div>
-
-        <p class="solar-note">
-          Esta estimación es preliminar. La cotización final depende de la ubicación,
-          tipo de techo, sombras, estructura, protecciones, inversor y visita técnica.
-        </p>
-
-        <a
-          id="solar-whatsapp"
-          class="btn secondary solar-whatsapp-btn"
-          href="#"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Enviar resultado a Voltex
-        </a>
+      <div class="form-group">
+        <label for="cliente-nombre">Nombre completo</label>
+        <input
+          type="text"
+          id="cliente-nombre"
+          placeholder="Ejemplo: Juan Pérez"
+          required
+        />
       </div>
+
+      <div class="form-group">
+        <label for="cliente-whatsapp">WhatsApp</label>
+        <input
+          type="tel"
+          id="cliente-whatsapp"
+          placeholder="Ejemplo: 6338-9243"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="cliente-correo">Correo electrónico</label>
+        <input
+          type="email"
+          id="cliente-correo"
+          placeholder="Ejemplo: cliente@gmail.com"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="cliente-ubicacion">Ubicación del proyecto</label>
+        <input
+          type="text"
+          id="cliente-ubicacion"
+          placeholder="Ejemplo: Chitré, Panamá Oeste, David..."
+          required
+        />
+      </div>
+
+      <h3>Datos eléctricos</h3>
+
+      <div class="form-group">
+        <label for="distribuidora">Distribuidora eléctrica</label>
+        <select id="distribuidora" required>
+          <option value="">Selecciona una opción</option>
+          <option value="ENSA">ENSA</option>
+          <option value="EDEMET">EDEMET</option>
+          <option value="EDECHI">EDECHI</option>
+          <option value="No estoy seguro">No estoy seguro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="consumo-kwh">Consumo mensual</label>
+        <input
+          type="number"
+          id="consumo-kwh"
+          placeholder="Ejemplo: 600"
+          min="1"
+          required
+        />
+        <small>Ingresa el consumo mensual en kWh según tu factura.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="factura-mensual">Monto mensual de la factura</label>
+        <input
+          type="number"
+          id="factura-mensual"
+          placeholder="Ejemplo: 120"
+          min="1"
+          step="0.01"
+          required
+        />
+        <small>Ingresa el monto aproximado en balboas.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="cobertura-solar">
+          Porcentaje que deseas cubrir: <span id="cobertura-valor">80%</span>
+        </label>
+        <input
+          type="range"
+          id="cobertura-solar"
+          min="30"
+          max="100"
+          value="80"
+          step="5"
+        />
+      </div>
+
+      <h3>Tipo de sistema</h3>
+
+      <div class="form-group">
+        <label for="tipo-sistema">Sistema deseado</label>
+        <select id="tipo-sistema" required>
+          <option value="">Selecciona una opción</option>
+          <option value="Conectado a red sin baterías">Conectado a red sin baterías</option>
+          <option value="Conectado a red con baterías">Conectado a red con baterías</option>
+          <option value="Sistema aislado con baterías">Sistema aislado con baterías</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="nivel-bateria">Nivel de respaldo con baterías</label>
+        <select id="nivel-bateria">
+          <option value="Sin baterías">Sin baterías</option>
+          <option value="Respaldo básico">Respaldo básico</option>
+          <option value="Respaldo medio">Respaldo medio</option>
+          <option value="Respaldo alto">Respaldo alto</option>
+        </select>
+        <small>
+          Las baterías aumentan la inversión, pero permiten respaldo durante apagones.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="excedentes-red">¿Deseas evaluar inyección de excedentes a la red?</label>
+        <select id="excedentes-red">
+          <option value="No estoy seguro">No estoy seguro</option>
+          <option value="Sí">Sí, deseo evaluarlo</option>
+          <option value="No">No</option>
+        </select>
+        <small>
+          Sujeto a evaluación técnica, trámite de interconexión y condiciones de la distribuidora.
+        </small>
+      </div>
+
+      <h3>Condiciones de instalación</h3>
+
+      <div class="form-group">
+        <label for="tipo-techo">Tipo de techo</label>
+        <select id="tipo-techo">
+          <option value="No estoy seguro">No estoy seguro</option>
+          <option value="Techo de zinc">Techo de zinc</option>
+          <option value="Techo de losa">Techo de losa</option>
+          <option value="Techo de teja">Techo de teja</option>
+          <option value="Estructura metálica">Estructura metálica</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="complejidad-instalacion">Complejidad estimada de instalación</label>
+        <select id="complejidad-instalacion">
+          <option value="Normal">Normal</option>
+          <option value="Media">Media</option>
+          <option value="Alta">Alta</option>
+        </select>
+        <small>
+          Considera altura, acceso al techo, distancia al tablero, canalización y estructura.
+        </small>
+      </div>
+
+      <h3>Parámetros técnicos</h3>
+
+      <div class="form-group">
+        <label for="potencia-panel">Potencia del panel</label>
+        <select id="potencia-panel">
+          <option value="550">550 W</option>
+          <option value="580">580 W</option>
+          <option value="600">600 W</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="horas-sol">Horas solares pico</label>
+        <input
+          type="number"
+          id="horas-sol"
+          value="4.5"
+          min="3"
+          max="6"
+          step="0.1"
+        />
+        <small>Para Panamá se puede usar 4.0 a 4.5 como estimación inicial.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="eficiencia-sistema">Eficiencia del sistema</label>
+        <input
+          type="number"
+          id="eficiencia-sistema"
+          value="80"
+          min="60"
+          max="95"
+          step="1"
+        />
+        <small>
+          Incluye pérdidas por temperatura, inversor, cables, suciedad y orientación.
+        </small>
+      </div>
+
+      <div class="form-group consent-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="acepta-datos" required />
+          Acepto que Voltex Innovations PA utilice estos datos para contactarme
+          y preparar una cotización personalizada.
+        </label>
+      </div>
+
+      <button type="submit" class="btn primary">
+        Calcular sistema solar
+      </button>
+    </form>
+
+    <div class="solar-results" id="solar-results">
+      <h3>Resultado estimado</h3>
+
+      <div class="result-item">
+        <span>Sistema recomendado:</span>
+        <strong id="resultado-kwp">-- kWp</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Cantidad de paneles:</span>
+        <strong id="resultado-paneles">--</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Generación mensual:</span>
+        <strong id="resultado-generacion">-- kWh/mes</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Ahorro mensual estimado:</span>
+        <strong id="resultado-ahorro-mensual">B/. --</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Ahorro anual estimado:</span>
+        <strong id="resultado-ahorro-anual">B/. --</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Inversión estimada instalada:</span>
+        <strong id="resultado-inversion">B/. --</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Retorno aproximado:</span>
+        <strong id="resultado-retorno">-- años</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Área aproximada requerida:</span>
+        <strong id="resultado-area">-- m²</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Tipo de sistema:</span>
+        <strong id="resultado-tipo-sistema">--</strong>
+      </div>
+
+      <div class="result-item">
+        <span>Baterías:</span>
+        <strong id="resultado-baterias">--</strong>
+      </div>
+
+      <p class="solar-note">
+        Esta estimación es preliminar. La cotización final depende de visita técnica,
+        tipo de techo, sombras, estructura, protecciones, inversor, canalización,
+        baterías, permisos e interconexión con la distribuidora.
+      </p>
+
+      <a
+        id="solar-whatsapp"
+        class="btn secondary solar-whatsapp-btn disabled-link"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Enviar resultado a Voltex
+      </a>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- COTIZACIÓN -->
   <section id="cotizacion" class="section cotizacion">

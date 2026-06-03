@@ -807,4 +807,173 @@ section {
 /* Corrige enlace suelto de calculadora fuera del menú */
 body > a[href="#calculadora-solar"] {
   display: none !important;
+}/* MEJORAS CALCULADORA SOLAR AVANZADA */
+.solar-calculator-section {
+  background-color: #f4f7fa;
+}
+
+.solar-calculator-section > p {
+  max-width: 850px;
+  margin-bottom: 10px;
+}
+
+.solar-calculator-container {
+  margin-top: 35px;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 35px;
+  align-items: start;
+}
+
+.solar-form {
+  background-color: white;
+  padding: 34px;
+  border-radius: 16px;
+  text-align: left;
+  border-left: 5px solid #00c8ff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.solar-form h3 {
+  margin: 28px 0 18px;
+  color: #081c2f;
+  font-size: 22px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dce4ea;
+}
+
+.solar-form h3:first-child {
+  margin-top: 0;
+}
+
+.solar-form .form-group {
+  margin-bottom: 18px;
+}
+
+.solar-form small {
+  display: block;
+  margin-top: 6px;
+  color: #666;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.solar-form input[type="range"] {
+  accent-color: #00c8ff;
+  cursor: pointer;
+}
+
+.consent-group {
+  background-color: #f4f7fa;
+  padding: 16px;
+  border-radius: 10px;
+  border-left: 4px solid #00c8ff;
+}
+
+.checkbox-label {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 10px;
+  color: #081c2f !important;
+  font-weight: 500 !important;
+  line-height: 1.5;
+}
+
+.checkbox-label input {
+  width: auto !important;
+  margin-top: 4px;
+}
+
+.solar-results {
+  background-color: #081c2f;
+  color: white;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.18);
+  position: sticky;
+  top: 105px;
+}
+
+.solar-results h3 {
+  font-size: 26px;
+  margin-bottom: 22px;
+  color: white;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.result-item span {
+  color: #d6d6d6;
+  font-size: 15px;
+}
+
+.result-item strong {
+  color: #00c8ff;
+  text-align: right;
+  font-size: 15px;
+}
+
+.solar-note {
+  margin-top: 22px;
+  color: #e8e8e8;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.solar-whatsapp-btn {
+  margin-top: 22px;
+  border-color: #00c8ff;
+  color: white;
+  text-align: center;
+}
+
+.solar-whatsapp-btn:hover {
+  background-color: #00c8ff;
+  color: #081c2f;
+}
+
+.disabled-link {
+  opacity: 0.55;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE CALCULADORA AVANZADA */
+@media (max-width: 1000px) {
+  .solar-calculator-container {
+    grid-template-columns: 1fr;
+  }
+
+  .solar-results {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .solar-form {
+    padding: 24px;
+  }
+
+  .solar-results {
+    padding: 24px;
+  }
+
+  .result-item {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .result-item strong {
+    text-align: left;
+  }
+
+  .solar-form h3 {
+    font-size: 20px;
+  }
 }
