@@ -1,5 +1,37 @@
 document.addEventListener("DOMContentLoaded", () => {
   /* ==============================
+     CONFIGURACIÓN SUPABASE
+     Nota: esta es la anon public key.
+     Nunca coloques aquí la service_role key.
+  ============================== */
+  const SUPABASE_REST_URL =
+    "https://pfqnktvuletywssnmewv.supabase.co/rest/v1/cotizaciones_solares";
+
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmcW5rdHZ1bGV0eXdzc25tZXd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDk5MTcsImV4cCI6MjA5NjA4NTkxN30.sNOsM37_X0J76SiWp2qpIUUB1veiqh5Ypz-8CMdQzRc";
+
+  const guardarCotizacionSupabase = async (datosCotizacion) => {
+    const respuesta = await fetch(SUPABASE_REST_URL, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify(datosCotizacion),
+    });
+
+    if (!respuesta.ok) {
+      const error = await respuesta.text();
+      console.error("Error al guardar en Supabase:", error);
+      throw new Error("No se pudo guardar la cotización en la base de datos.");
+    }
+
+    return true;
+  };
+
+  /* ==============================
      MENÚ MÓVIL
   ============================== */
   const menuToggle = document.getElementById("menu-toggle");
@@ -74,6 +106,9 @@ Quedo atento a su respuesta.`;
     const tipoSistemaInput = document.getElementById("tipo-sistema");
     const nivelBateriaInput = document.getElementById("nivel-bateria");
     const solarWhatsapp = document.getElementById("solar-whatsapp");
+
+    let ultimaCotizacionSolar = null;
+    let ultimaUrlWhatsapp = "#";
 
     const formatoDinero = (valor) => {
       return `B/. ${valor.toLocaleString("es-PA", {
@@ -163,6 +198,7 @@ Quedo atento a su respuesta.`;
         .value.trim();
 
       const distribuidora = document.getElementById("distribuidora").value;
+
       const consumoMensual = parseFloat(
         document.getElementById("consumo-kwh").value
       );
@@ -178,6 +214,7 @@ Quedo atento a su respuesta.`;
       const nivelBateria = document.getElementById("nivel-bateria").value;
       const excedentesRed = document.getElementById("excedentes-red").value;
       const tipoTecho = document.getElementById("tipo-techo").value;
+
       const complejidad = document.getElementById(
         "complejidad-instalacion"
       ).value;
@@ -287,6 +324,47 @@ Quedo atento a su respuesta.`;
 
       document.getElementById("resultado-baterias").textContent = nivelBateria;
 
+      ultimaCotizacionSolar = {
+        nombre: clienteNombre,
+        whatsapp: clienteWhatsapp,
+        correo: clienteCorreo || null,
+        ubicacion: clienteUbicacion,
+        distribuidora: distribuidora,
+
+        consumo_kwh: consumoMensual,
+        factura_mensual: facturaMensual,
+        tarifa_promedio: tarifaPromedio,
+        porcentaje_cobertura: cobertura * 100,
+
+        tipo_sistema: tipoSistema,
+        nivel_bateria: nivelBateria,
+        excedentes_red: excedentesRed,
+        tipo_techo: tipoTecho,
+        complejidad_instalacion: complejidad,
+
+        potencia_panel: potenciaPanel,
+        horas_sol: horasSol,
+        eficiencia_sistema: eficiencia * 100,
+
+        kwp_recomendado: sistemaRealKwp,
+        cantidad_paneles: cantidadPaneles,
+        generacion_mensual: generacionMensual,
+        ahorro_mensual: ahorroMensual,
+        ahorro_anual: ahorroAnual,
+        area_requerida: areaRequerida,
+        inversion_min: inversionMin,
+        inversion_max: inversionMax,
+        retorno_min: retornoMin,
+        retorno_max: retornoMax,
+
+        prioridad_cliente: "Nuevo",
+        estado: "Nuevo",
+        observaciones:
+          "Cotización generada desde calculadora solar web. Pendiente de revisión técnica.",
+        origen: "Calculadora web",
+        acepto_uso_datos: aceptaDatos,
+      };
+
       const numeroWhatsApp = "50763389243";
 
       const mensaje = `Hola, Voltex Innovations PA. Realicé una estimación solar en la página web y deseo una cotización.
@@ -325,12 +403,44 @@ Retorno aproximado: ${retornoMin.toFixed(1)} - ${retornoMax.toFixed(1)} años
 
 Nota: Entiendo que esta es una estimación preliminar y que la cotización final depende de una evaluación técnica.`;
 
-      const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(
+      ultimaUrlWhatsapp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(
         mensaje
       )}`;
 
-      solarWhatsapp.href = url;
+      solarWhatsapp.href = "#";
+      solarWhatsapp.textContent = "Enviar resultado a Voltex";
       solarWhatsapp.classList.remove("disabled-link");
+    });
+
+    solarWhatsapp.addEventListener("click", async (event) => {
+      event.preventDefault();
+
+      if (!ultimaCotizacionSolar || ultimaUrlWhatsapp === "#") {
+        alert("Primero debes calcular el sistema solar.");
+        return;
+      }
+
+      solarWhatsapp.textContent = "Guardando y abriendo WhatsApp...";
+
+      try {
+        await guardarCotizacionSupabase(ultimaCotizacionSolar);
+
+        window.open(ultimaUrlWhatsapp, "_blank", "noopener,noreferrer");
+
+        solarWhatsapp.textContent = "Resultado enviado a Voltex";
+      } catch (error) {
+        console.error(error);
+
+        const abrirWhatsapp = confirm(
+          "No se pudo guardar la información en la base de datos. ¿Deseas enviar el resultado por WhatsApp de todas formas?"
+        );
+
+        if (abrirWhatsapp) {
+          window.open(ultimaUrlWhatsapp, "_blank", "noopener,noreferrer");
+        }
+
+        solarWhatsapp.textContent = "Enviar resultado a Voltex";
+      }
     });
 
     ajustarSelectorBaterias();
