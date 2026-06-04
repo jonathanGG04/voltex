@@ -1000,3 +1000,16 @@ body > a[href="#calculadora-solar"] {
 .solar-status-message.error {
   color: #ffb4b4;
 }
+/* BOTÓN PANEL INTERNO EN MENÚ */
+.nav-panel {
+  border: 1px solid #00c8ff;
+  color: #00c8ff !important;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.nav-panel:hover {
+  background-color: #00c8ff;
+  color: #081c2f !important;
+}
