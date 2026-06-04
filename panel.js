@@ -95,7 +95,21 @@ const normalizarWhatsapp = (whatsapp) => {
 };
 
 const mostrarMensaje = (mensaje, tipo = "normal") => {
-    const generarCotizacion = (item) => {
+  panelMessage.textContent = mensaje;
+
+  if (tipo === "error") {
+    panelMessage.style.color = "#d93636";
+  } else if (tipo === "success") {
+    panelMessage.style.color = "#008a3d";
+  } else {
+    panelMessage.style.color = "#081c2f";
+  }
+};
+
+/* ==============================
+   GENERAR COTIZACIÓN IMPRIMIBLE
+============================== */
+const generarCotizacion = (item) => {
   const fechaActual = new Date().toLocaleDateString("es-PA", {
     year: "numeric",
     month: "long",
@@ -505,27 +519,18 @@ const mostrarMensaje = (mensaje, tipo = "normal") => {
     </html>
   `;
 
-  const ventana = window.open("", "_blank", "noopener,noreferrer");
+  const ventana = window.open("", "_blank");
 
   if (!ventana) {
-    alert("El navegador bloqueó la ventana emergente. Permite pop-ups para generar la cotización.");
+    alert(
+      "El navegador bloqueó la ventana emergente. Permite pop-ups para generar la cotización."
+    );
     return;
   }
 
   ventana.document.open();
   ventana.document.write(cotizacionHTML);
   ventana.document.close();
-};
-
-  panelMessage.textContent = mensaje;
-
-  if (tipo === "error") {
-    panelMessage.style.color = "#d93636";
-  } else if (tipo === "success") {
-    panelMessage.style.color = "#008a3d";
-  } else {
-    panelMessage.style.color = "#081c2f";
-  }
 };
 
 /* ==============================
@@ -656,9 +661,7 @@ const cargarCotizaciones = async () => {
 const actualizarResumen = () => {
   const total = cotizaciones.length;
 
-  const nuevas = cotizaciones.filter(
-    (item) => item.estado === "Nuevo"
-  ).length;
+  const nuevas = cotizaciones.filter((item) => item.estado === "Nuevo").length;
 
   const altaPrioridad = cotizaciones.filter(
     (item) => item.prioridad_cliente === "Alta"
@@ -703,8 +706,7 @@ const obtenerCotizacionesFiltradas = () => {
       ${item.nivel_bateria || ""}
     `.toLowerCase();
 
-    const coincideBusqueda =
-      busqueda === "" || textoBusqueda.includes(busqueda);
+    const coincideBusqueda = busqueda === "" || textoBusqueda.includes(busqueda);
 
     return coincideEstado && coincidePrioridad && coincideBusqueda;
   });
@@ -728,7 +730,9 @@ const renderizarCotizaciones = () => {
   lista.forEach((item) => {
     const numeroWhatsapp = normalizarWhatsapp(item.whatsapp);
 
-    const mensajeWhatsapp = `Hola ${item.nombre || ""}, le saluda Voltex Innovations PA. Recibimos su solicitud de cotización solar y queremos coordinar la revisión técnica para confirmar el sistema recomendado.`;
+    const mensajeWhatsapp = `Hola ${
+      item.nombre || ""
+    }, le saluda Voltex Innovations PA. Recibimos su solicitud de cotización solar y queremos coordinar la revisión técnica para confirmar el sistema recomendado.`;
 
     const urlWhatsapp = `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(
       mensajeWhatsapp
@@ -843,8 +847,8 @@ const renderizarCotizaciones = () => {
         </a>
 
         <button class="quote-doc-btn" data-id="${item.id}">
-  Generar cotización
-</button>
+          Generar cotización
+        </button>
 
         <button class="state-btn" data-id="${item.id}" data-estado="Contactado">
           Contactado
@@ -884,7 +888,6 @@ const renderizarCotizaciones = () => {
 
   activarBotonesEstado();
 activarBotonesNotas();
-activarBotonesCotizacion();
 };
 
 const activarBotonesEstado = () => {
@@ -910,6 +913,24 @@ const activarBotonesNotas = () => {
       const nota = textarea.value.trim();
 
       await actualizarNota(id, nota);
+    });
+  });
+};
+
+const activarBotonesCotizacion = () => {
+  const botones = document.querySelectorAll(".quote-doc-btn");
+
+  botones.forEach((boton) => {
+    boton.addEventListener("click", () => {
+      const id = boton.dataset.id;
+      const cotizacion = cotizaciones.find((item) => item.id === id);
+
+      if (!cotizacion) {
+        alert("No se encontró la información de esta cotización.");
+        return;
+      }
+
+      generarCotizacion(cotizacion);
     });
   });
 };
@@ -980,7 +1001,24 @@ searchInput.addEventListener("input", renderizarCotizaciones);
 refreshBtn.addEventListener("click", async () => {
   await cargarCotizaciones();
 });
+/* ==============================
+   EVENTO GLOBAL PARA GENERAR COTIZACIÓN
+============================== */
+quotesGrid.addEventListener("click", (event) => {
+  const botonCotizacion = event.target.closest(".quote-doc-btn");
 
+  if (!botonCotizacion) return;
+
+  const id = botonCotizacion.dataset.id;
+  const cotizacion = cotizaciones.find((item) => item.id === id);
+
+  if (!cotizacion) {
+    alert("No se encontró la información de esta cotización.");
+    return;
+  }
+
+  generarCotizacion(cotizacion);
+});
 /* ==============================
    INICIO
 ============================== */
