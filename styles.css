@@ -977,3 +977,11 @@ body > a[href="#calculadora-solar"] {
     font-size: 20px;
   }
 }
+/* AVISO DE PRIVACIDAD EN CALCULADORA */
+.privacy-note {
+  display: block;
+  margin-top: 10px;
+  color: #555;
+  font-size: 13px;
+  line-height: 1.5;
+}

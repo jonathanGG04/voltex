@@ -420,14 +420,14 @@ Nota: Entiendo que esta es una estimación preliminar y que la cotización final
         return;
       }
 
-      solarWhatsapp.textContent = "Guardando y abriendo WhatsApp...";
+      solarWhatsapp.textContent = "Guardando solicitud...";
 
       try {
         await guardarCotizacionSupabase(ultimaCotizacionSolar);
 
         window.open(ultimaUrlWhatsapp, "_blank", "noopener,noreferrer");
 
-        solarWhatsapp.textContent = "Resultado enviado a Voltex";
+        solarWhatsapp.textContent = "Solicitud guardada correctamente";
       } catch (error) {
         console.error(error);
 
@@ -439,7 +439,7 @@ Nota: Entiendo que esta es una estimación preliminar y que la cotización final
           window.open(ultimaUrlWhatsapp, "_blank", "noopener,noreferrer");
         }
 
-        solarWhatsapp.textContent = "Enviar resultado a Voltex";
+        solarWhatsapp.textContent = "Enviar solicitud a Voltex";
       }
     });
 
