@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Panel Interno | Voltex Innovations PA</title>
+
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="stylesheet" href="panel.css" />
+</head>
+
+<body>
+  <!-- PANTALLA DE LOGIN -->
+  <main class="login-screen" id="login-screen">
+    <section class="login-card">
+      <div class="login-logo">
+        <span>Voltex</span> Innovations PA
+      </div>
+
+      <h1>Panel interno</h1>
+
+      <p>
+        Acceso exclusivo para la gestión de cotizaciones solares,
+        clientes y seguimiento comercial de Voltex.
+      </p>
+
+      <form id="login-form" class="login-form">
+        <div class="form-group">
+          <label for="login-email">Correo</label>
+          <input
+            type="email"
+            id="login-email"
+            placeholder="voltexinnovationspa@gmail.com"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Contraseña</label>
+          <input
+            type="password"
+            id="login-password"
+            placeholder="Ingresa tu contraseña"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn primary">
+          Iniciar sesión
+        </button>
+
+        <p id="login-message" class="login-message"></p>
+      </form>
+    </section>
+  </main>
+
+  <!-- PANEL INTERNO -->
+  <main class="dashboard hidden" id="dashboard">
+    <header class="dashboard-header">
+      <div>
+        <h1><span>Voltex</span> Panel Interno</h1>
+        <p>Gestión de solicitudes solares y oportunidades comerciales.</p>
+      </div>
+
+      <button class="btn logout" id="logout-btn">
+        Cerrar sesión
+      </button>
+    </header>
+
+    <!-- RESUMEN -->
+    <section class="summary-grid">
+      <div class="summary-card">
+        <span>Total solicitudes</span>
+        <strong id="total-cotizaciones">0</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Nuevas</span>
+        <strong id="total-nuevas">0</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Alta prioridad</span>
+        <strong id="total-alta-prioridad">0</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Valor estimado</span>
+        <strong id="valor-total-estimado">B/. 0.00</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Utilidad estimada</span>
+        <strong id="utilidad-total-estimada">B/. 0.00</strong>
+      </div>
+    </section>
+
+    <!-- FILTROS -->
+    <section class="filters-section">
+      <div class="filter-box">
+        <label for="estado-filter">Filtrar por estado</label>
+        <select id="estado-filter">
+          <option value="Todos">Todos</option>
+          <option value="Nuevo">Nuevo</option>
+          <option value="Contactado">Contactado</option>
+          <option value="Visita programada">Visita programada</option>
+          <option value="Cotizado">Cotizado</option>
+          <option value="Ganado">Ganado</option>
+          <option value="Perdido">Perdido</option>
+        </select>
+      </div>
+
+      <div class="filter-box">
+        <label for="prioridad-filter">Filtrar por prioridad</label>
+        <select id="prioridad-filter">
+          <option value="Todas">Todas</option>
+          <option value="Alta">Alta</option>
+          <option value="Media">Media</option>
+          <option value="Normal">Normal</option>
+        </select>
+      </div>
+
+      <div class="filter-box search-box">
+        <label for="search-input">Buscar cliente</label>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Nombre, ubicación o WhatsApp..."
+        />
+      </div>
+
+      <button class="btn secondary" id="refresh-btn">
+        Actualizar
+      </button>
+    </section>
+
+    <!-- MENSAJE DEL PANEL -->
+    <p id="panel-message" class="panel-message"></p>
+
+    <!-- LISTADO DE COTIZACIONES -->
+    <section class="quotes-section">
+      <div class="section-title">
+        <h2>Solicitudes recibidas</h2>
+        <p>
+          Revisa clientes, precios recomendados, prioridad y estado comercial.
+        </p>
+      </div>
+
+      <div class="quotes-grid" id="quotes-grid">
+        <!-- Las tarjetas se cargan desde panel.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- SUPABASE JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- SCRIPT DEL PANEL -->
+  <script src="panel.js"></script>
+</body>
+</html>
