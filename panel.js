@@ -107,7 +107,7 @@ const mostrarMensaje = (mensaje, tipo = "normal") => {
 };
 
 /* ==============================
-   GENERAR COTIZACIÓN IMPRIMIBLE
+   GENERAR COTIZACIÓN EDITABLE
 ============================== */
 const generarCotizacion = (item) => {
   const fechaActual = new Date().toLocaleDateString("es-PA", {
@@ -115,6 +115,51 @@ const generarCotizacion = (item) => {
     month: "long",
     day: "2-digit",
   });
+
+  const firmaUrl = new URL("img/firma-voltex.png", window.location.href).href;
+
+  const numeroWhatsappCliente = normalizarWhatsapp(item.whatsapp);
+
+  const mensajeWhatsappCliente = `Hola ${item.nombre || ""}, le saluda Voltex Innovations PA.
+
+Le compartimos la cotización preliminar de su sistema solar fotovoltaico.
+
+Sistema estimado: ${formatoNumero(item.kwp_recomendado, 2)} kWp
+Cantidad estimada de paneles: ${item.cantidad_paneles || 0}
+Precio recomendado preliminar: ${formatoDinero(item.precio_cobro_recomendado)}
+
+Esta cotización está sujeta a revisión técnica del sitio, condiciones del techo, protecciones, inversor, baterías e interconexión.
+
+Quedamos atentos para coordinar los siguientes pasos.`;
+
+  const urlWhatsappCliente = `https://wa.me/${numeroWhatsappCliente}?text=${encodeURIComponent(
+    mensajeWhatsappCliente
+  )}`;
+
+  const asuntoCorreo = `Cotización preliminar Voltex Innovations PA - ${
+    item.nombre || "Cliente"
+  }`;
+
+  const cuerpoCorreo = `Saludos ${item.nombre || ""},
+
+Le compartimos la cotización preliminar de su sistema solar fotovoltaico.
+
+Sistema estimado: ${formatoNumero(item.kwp_recomendado, 2)} kWp
+Cantidad estimada de paneles: ${item.cantidad_paneles || 0}
+Precio recomendado preliminar: ${formatoDinero(item.precio_cobro_recomendado)}
+
+Esta cotización debe validarse mediante visita técnica, revisión del techo, sombras, protecciones, inversor, baterías e interconexión.
+
+Quedamos atentos para coordinar los siguientes pasos.
+
+Atentamente,
+Voltex Innovations PA
+voltexinnovationspa@gmail.com
++507 6338-9243`;
+
+  const mailtoUrl = `mailto:${item.correo || ""}?subject=${encodeURIComponent(
+    asuntoCorreo
+  )}&body=${encodeURIComponent(cuerpoCorreo)}`;
 
   const cotizacionHTML = `
     <!DOCTYPE html>
@@ -135,6 +180,56 @@ const generarCotizacion = (item) => {
           color: #222;
           background: #f4f7fa;
           line-height: 1.6;
+        }
+
+        .actions {
+          max-width: 900px;
+          margin: 20px auto;
+          display: flex;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        .btn {
+          border: none;
+          padding: 12px 18px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: bold;
+          text-decoration: none;
+          font-size: 14px;
+        }
+
+        .print-btn {
+          background: #00c8ff;
+          color: #081c2f;
+        }
+
+        .whatsapp-btn {
+          background: #25d366;
+          color: white;
+        }
+
+        .email-btn {
+          background: #ffb703;
+          color: #081c2f;
+        }
+
+        .close-btn {
+          background: #081c2f;
+          color: white;
+        }
+
+        .edit-note {
+          max-width: 900px;
+          margin: 0 auto 15px;
+          background: #fff8e1;
+          border-left: 5px solid #ffc107;
+          padding: 12px 16px;
+          border-radius: 8px;
+          color: #4d3b00;
+          font-size: 14px;
         }
 
         .document {
@@ -245,11 +340,37 @@ const generarCotizacion = (item) => {
           color: #4d3b00;
         }
 
+        .editable {
+          outline: 1px dashed transparent;
+          padding: 2px 4px;
+          border-radius: 4px;
+          cursor: text;
+        }
+
+        .editable:hover,
+        .editable:focus {
+          outline: 1px dashed #00c8ff;
+          background: #eefaff;
+        }
+
         .signatures {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 50px;
           margin-top: 60px;
+          align-items: end;
+        }
+
+        .signature-box {
+          text-align: center;
+        }
+
+        .signature-img {
+          max-width: 260px;
+          max-height: 95px;
+          object-fit: contain;
+          display: block;
+          margin: 0 auto 8px;
         }
 
         .signature-line {
@@ -257,32 +378,6 @@ const generarCotizacion = (item) => {
           padding-top: 8px;
           text-align: center;
           font-size: 14px;
-        }
-
-        .actions {
-          max-width: 900px;
-          margin: 20px auto;
-          display: flex;
-          justify-content: flex-end;
-          gap: 12px;
-        }
-
-        .btn {
-          border: none;
-          padding: 12px 18px;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: bold;
-        }
-
-        .print-btn {
-          background: #00c8ff;
-          color: #081c2f;
-        }
-
-        .close-btn {
-          background: #081c2f;
-          color: white;
         }
 
         @media print {
@@ -297,8 +392,15 @@ const generarCotizacion = (item) => {
             padding: 25px;
           }
 
-          .actions {
+          .actions,
+          .edit-note {
             display: none;
+          }
+
+          .editable:hover,
+          .editable:focus {
+            outline: none;
+            background: transparent;
           }
         }
       </style>
@@ -307,7 +409,15 @@ const generarCotizacion = (item) => {
     <body>
       <div class="actions">
         <button class="btn print-btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+        <a class="btn whatsapp-btn" href="${urlWhatsappCliente}" target="_blank" rel="noopener noreferrer">Enviar por WhatsApp</a>
+        <a class="btn email-btn" href="${mailtoUrl}">Preparar correo</a>
         <button class="btn close-btn" onclick="window.close()">Cerrar</button>
+      </div>
+
+      <div class="edit-note">
+        Puedes editar los campos resaltables antes de imprimir o guardar como PDF.
+        Haz clic sobre el texto que deseas cambiar. Para enviar el PDF por WhatsApp o correo,
+        primero guárdalo como PDF y luego adjúntalo manualmente.
       </div>
 
       <main class="document">
@@ -321,7 +431,10 @@ const generarCotizacion = (item) => {
           <div class="quote-info">
             <strong>Cotización preliminar</strong><br />
             Fecha: ${fechaActual}<br />
-            Estado: ${escaparHtml(item.estado || "Nuevo")}
+            Estado:
+            <span class="editable" contenteditable="true">${escaparHtml(
+              item.estado || "Nuevo"
+            )}</span>
           </div>
         </section>
 
@@ -330,27 +443,37 @@ const generarCotizacion = (item) => {
         <div class="grid">
           <div class="item">
             <span>Cliente</span>
-            <strong>${escaparHtml(item.nombre || "No indicado")}</strong>
+            <strong class="editable" contenteditable="true">${escaparHtml(
+              item.nombre || "No indicado"
+            )}</strong>
           </div>
 
           <div class="item">
             <span>WhatsApp</span>
-            <strong>${escaparHtml(item.whatsapp || "No indicado")}</strong>
+            <strong class="editable" contenteditable="true">${escaparHtml(
+              item.whatsapp || "No indicado"
+            )}</strong>
           </div>
 
           <div class="item">
             <span>Correo</span>
-            <strong>${escaparHtml(item.correo || "No indicado")}</strong>
+            <strong class="editable" contenteditable="true">${escaparHtml(
+              item.correo || "No indicado"
+            )}</strong>
           </div>
 
           <div class="item">
             <span>Ubicación</span>
-            <strong>${escaparHtml(item.ubicacion || "No indicada")}</strong>
+            <strong class="editable" contenteditable="true">${escaparHtml(
+              item.ubicacion || "No indicada"
+            )}</strong>
           </div>
 
           <div class="item">
             <span>Distribuidora</span>
-            <strong>${escaparHtml(item.distribuidora || "No indicada")}</strong>
+            <strong class="editable" contenteditable="true">${escaparHtml(
+              item.distribuidora || "No indicada"
+            )}</strong>
           </div>
 
           <div class="item">
@@ -364,12 +487,17 @@ const generarCotizacion = (item) => {
         <div class="grid">
           <div class="item">
             <span>Consumo mensual</span>
-            <strong>${formatoNumero(item.consumo_kwh, 0)} kWh/mes</strong>
+            <strong class="editable" contenteditable="true">${formatoNumero(
+              item.consumo_kwh,
+              0
+            )} kWh/mes</strong>
           </div>
 
           <div class="item">
             <span>Factura mensual aproximada</span>
-            <strong>${formatoDinero(item.factura_mensual)}</strong>
+            <strong class="editable" contenteditable="true">${formatoDinero(
+              item.factura_mensual
+            )}</strong>
           </div>
 
           <div class="item">
@@ -388,12 +516,17 @@ const generarCotizacion = (item) => {
         <div class="grid">
           <div class="item">
             <span>Potencia recomendada</span>
-            <strong>${formatoNumero(item.kwp_recomendado, 2)} kWp</strong>
+            <strong class="editable" contenteditable="true">${formatoNumero(
+              item.kwp_recomendado,
+              2
+            )} kWp</strong>
           </div>
 
           <div class="item">
             <span>Cantidad estimada de paneles</span>
-            <strong>${item.cantidad_paneles || 0} paneles</strong>
+            <strong class="editable" contenteditable="true">${
+              item.cantidad_paneles || 0
+            } paneles</strong>
           </div>
 
           <div class="item">
@@ -408,12 +541,16 @@ const generarCotizacion = (item) => {
 
           <div class="item">
             <span>Tipo de sistema</span>
-            <strong>${escaparHtml(item.tipo_sistema || "No indicado")}</strong>
+            <strong class="editable" contenteditable="true">${escaparHtml(
+              item.tipo_sistema || "No indicado"
+            )}</strong>
           </div>
 
           <div class="item">
             <span>Baterías</span>
-            <strong>${escaparHtml(item.nivel_bateria || "No indicado")}</strong>
+            <strong class="editable" contenteditable="true">${escaparHtml(
+              item.nivel_bateria || "No indicado"
+            )}</strong>
           </div>
 
           <div class="item">
@@ -443,27 +580,29 @@ const generarCotizacion = (item) => {
           <div class="item">
             <span>Retorno aproximado</span>
             <strong>${formatoNumero(item.retorno_min, 1)} - ${formatoNumero(
-    item.retorno_max,
-    1
-  )} años</strong>
+              item.retorno_max,
+              1
+            )} años</strong>
           </div>
 
           <div class="item">
             <span>Rango estimado instalado</span>
             <strong>${formatoDinero(item.inversion_min)} - ${formatoDinero(
-    item.inversion_max
-  )}</strong>
+              item.inversion_max
+            )}</strong>
           </div>
         </div>
 
         <div class="price-box">
           <span>Precio recomendado preliminar</span>
-          <strong>${formatoDinero(item.precio_cobro_recomendado)}</strong>
+          <strong class="editable" contenteditable="true">${formatoDinero(
+            item.precio_cobro_recomendado
+          )}</strong>
         </div>
 
         <h2>5. Alcance preliminar del servicio</h2>
 
-        <ul>
+        <ul class="editable" contenteditable="true">
           <li>Suministro e instalación de paneles solares fotovoltaicos.</li>
           <li>Estructura de montaje según condiciones del techo o superficie disponible.</li>
           <li>Inversor solar o inversor híbrido, según el tipo de sistema definido.</li>
@@ -478,18 +617,20 @@ const generarCotizacion = (item) => {
         <div class="grid">
           <div class="item">
             <span>Tipo de techo</span>
-            <strong>${escaparHtml(item.tipo_techo || "Pendiente")}</strong>
+            <strong class="editable" contenteditable="true">${escaparHtml(
+              item.tipo_techo || "Pendiente"
+            )}</strong>
           </div>
 
           <div class="item">
             <span>Complejidad estimada</span>
-            <strong>${escaparHtml(
+            <strong class="editable" contenteditable="true">${escaparHtml(
               item.complejidad_instalacion || "Pendiente"
             )}</strong>
           </div>
         </div>
 
-        <div class="note">
+        <div class="note editable" contenteditable="true">
           Esta cotización es preliminar y debe validarse mediante visita técnica.
           El precio final puede variar según sombras, estado del techo, distancia
           al tablero, protecciones eléctricas, canalización, inversor, baterías,
@@ -498,7 +639,7 @@ const generarCotizacion = (item) => {
 
         <h2>7. Condiciones comerciales</h2>
 
-        <ul>
+        <ul class="editable" contenteditable="true">
           <li>Validez preliminar: 15 días calendario.</li>
           <li>Los precios pueden variar según disponibilidad de equipos y materiales.</li>
           <li>La instalación queda sujeta a inspección técnica y aceptación de la propuesta final.</li>
@@ -506,12 +647,18 @@ const generarCotizacion = (item) => {
         </ul>
 
         <div class="signatures">
-          <div class="signature-line">
-            Cliente
+          <div class="signature-box">
+            <div class="signature-line">Cliente</div>
           </div>
 
-          <div class="signature-line">
-            Voltex Innovations PA
+          <div class="signature-box">
+            <img
+              src="${firmaUrl}"
+              alt="Firma Voltex"
+              class="signature-img"
+              onerror="this.insertAdjacentHTML('afterend', '<p style=&quot;color:#777;font-size:12px;&quot;>Firma no encontrada</p>'); this.style.display='none';"
+            />
+            <div class="signature-line">Voltex Innovations PA</div>
           </div>
         </div>
       </main>
@@ -706,7 +853,8 @@ const obtenerCotizacionesFiltradas = () => {
       ${item.nivel_bateria || ""}
     `.toLowerCase();
 
-    const coincideBusqueda = busqueda === "" || textoBusqueda.includes(busqueda);
+    const coincideBusqueda =
+      busqueda === "" || textoBusqueda.includes(busqueda);
 
     return coincideEstado && coincidePrioridad && coincideBusqueda;
   });
@@ -887,7 +1035,7 @@ const renderizarCotizaciones = () => {
   });
 
   activarBotonesEstado();
-activarBotonesNotas();
+  activarBotonesNotas();
 };
 
 const activarBotonesEstado = () => {
@@ -913,24 +1061,6 @@ const activarBotonesNotas = () => {
       const nota = textarea.value.trim();
 
       await actualizarNota(id, nota);
-    });
-  });
-};
-
-const activarBotonesCotizacion = () => {
-  const botones = document.querySelectorAll(".quote-doc-btn");
-
-  botones.forEach((boton) => {
-    boton.addEventListener("click", () => {
-      const id = boton.dataset.id;
-      const cotizacion = cotizaciones.find((item) => item.id === id);
-
-      if (!cotizacion) {
-        alert("No se encontró la información de esta cotización.");
-        return;
-      }
-
-      generarCotizacion(cotizacion);
     });
   });
 };
@@ -1001,6 +1131,7 @@ searchInput.addEventListener("input", renderizarCotizaciones);
 refreshBtn.addEventListener("click", async () => {
   await cargarCotizaciones();
 });
+
 /* ==============================
    EVENTO GLOBAL PARA GENERAR COTIZACIÓN
 ============================== */
@@ -1019,6 +1150,7 @@ quotesGrid.addEventListener("click", (event) => {
 
   generarCotizacion(cotizacion);
 });
+
 /* ==============================
    INICIO
 ============================== */

@@ -8,11 +8,10 @@
 
   <meta name="robots" content="noindex, nofollow" />
 
-  <link rel="stylesheet" href="panel.css?v=3" />
+  <link rel="stylesheet" href="panel.css?v=7" />
 </head>
 
 <body>
-  <!-- PANTALLA DE LOGIN -->
   <main class="login-screen" id="login-screen">
     <section class="login-card">
       <div class="login-logo">
@@ -56,7 +55,6 @@
     </section>
   </main>
 
-  <!-- PANEL INTERNO -->
   <main class="dashboard hidden" id="dashboard">
     <header class="dashboard-header">
       <div>
@@ -69,7 +67,6 @@
       </button>
     </header>
 
-    <!-- RESUMEN -->
     <section class="summary-grid">
       <div class="summary-card">
         <span>Total solicitudes</span>
@@ -97,7 +94,6 @@
       </div>
     </section>
 
-    <!-- FILTROS -->
     <section class="filters-section">
       <div class="filter-box">
         <label for="estado-filter">Filtrar por estado</label>
@@ -136,10 +132,8 @@
       </button>
     </section>
 
-    <!-- MENSAJE DEL PANEL -->
     <p id="panel-message" class="panel-message"></p>
 
-    <!-- LISTADO DE COTIZACIONES -->
     <section class="quotes-section">
       <div class="section-title">
         <h2>Solicitudes recibidas</h2>
@@ -148,16 +142,11 @@
         </p>
       </div>
 
-      <div class="quotes-grid" id="quotes-grid">
-        <!-- Las tarjetas se cargan desde panel.js -->
-      </div>
+      <div class="quotes-grid" id="quotes-grid"></div>
     </section>
   </main>
 
-  <!-- SUPABASE JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- SCRIPT DEL PANEL -->
-  <script src="panel.js?v=3"></script>
+  <script src="panel.js?v=7"></script>
 </body>
 </html>
