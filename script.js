@@ -106,9 +106,22 @@ Quedo atento a su respuesta.`;
     const tipoSistemaInput = document.getElementById("tipo-sistema");
     const nivelBateriaInput = document.getElementById("nivel-bateria");
     const solarWhatsapp = document.getElementById("solar-whatsapp");
+    const solarStatusMessage = document.getElementById("solar-status-message");
 
     let ultimaCotizacionSolar = null;
     let ultimaUrlWhatsapp = "#";
+    let envioEnProceso = false;
+
+    const mostrarEstado = (mensaje, tipo = "") => {
+      if (!solarStatusMessage) return;
+
+      solarStatusMessage.textContent = mensaje;
+      solarStatusMessage.className = "solar-status-message";
+
+      if (tipo) {
+        solarStatusMessage.classList.add(tipo);
+      }
+    };
 
     const formatoDinero = (valor) => {
       return `B/. ${valor.toLocaleString("es-PA", {
@@ -407,9 +420,14 @@ Nota: Entiendo que esta es una estimación preliminar y que la cotización final
         mensaje
       )}`;
 
+      envioEnProceso = false;
       solarWhatsapp.href = "#";
-      solarWhatsapp.textContent = "Enviar resultado a Voltex";
+      solarWhatsapp.textContent = "Enviar solicitud a Voltex";
       solarWhatsapp.classList.remove("disabled-link");
+
+      mostrarEstado(
+        "Estimación lista. Puedes enviar la solicitud a Voltex para revisión técnica."
+      );
     });
 
     solarWhatsapp.addEventListener("click", async (event) => {
@@ -420,7 +438,13 @@ Nota: Entiendo que esta es una estimación preliminar y que la cotización final
         return;
       }
 
+      if (envioEnProceso) return;
+
+      envioEnProceso = true;
       solarWhatsapp.textContent = "Guardando solicitud...";
+      solarWhatsapp.classList.add("disabled-link");
+
+      mostrarEstado("Estamos guardando tu solicitud de cotización...");
 
       try {
         await guardarCotizacionSupabase(ultimaCotizacionSolar);
@@ -428,6 +452,11 @@ Nota: Entiendo que esta es una estimación preliminar y que la cotización final
         window.open(ultimaUrlWhatsapp, "_blank", "noopener,noreferrer");
 
         solarWhatsapp.textContent = "Solicitud guardada correctamente";
+
+        mostrarEstado(
+          "Solicitud guardada correctamente. Se abrirá WhatsApp para finalizar el contacto con Voltex.",
+          "success"
+        );
       } catch (error) {
         console.error(error);
 
@@ -439,7 +468,14 @@ Nota: Entiendo que esta es una estimación preliminar y que la cotización final
           window.open(ultimaUrlWhatsapp, "_blank", "noopener,noreferrer");
         }
 
+        envioEnProceso = false;
         solarWhatsapp.textContent = "Enviar solicitud a Voltex";
+        solarWhatsapp.classList.remove("disabled-link");
+
+        mostrarEstado(
+          "No se pudo guardar la solicitud en la base de datos. Puedes enviarla por WhatsApp de todas formas.",
+          "error"
+        );
       }
     });
 

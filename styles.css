@@ -985,3 +985,18 @@ body > a[href="#calculadora-solar"] {
   font-size: 13px;
   line-height: 1.5;
 }
+/* MENSAJE DE ESTADO DE LA CALCULADORA */
+.solar-status-message {
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #e8e8e8;
+}
+
+.solar-status-message.success {
+  color: #7ee787;
+}
+
+.solar-status-message.error {
+  color: #ffb4b4;
+}
