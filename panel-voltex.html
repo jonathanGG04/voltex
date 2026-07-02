@@ -16,8 +16,8 @@
   />
 
   <link
-    rel="stylesheet"
-    href="panel.css?v=8"
+  rel="stylesheet"
+  href="panel.css?v=9"
   />
 </head>
 
@@ -368,6 +368,13 @@
         >
           Actualizar mediciones
         </button>
+        <button
+           type="button"
+           class="btn excel-btn"
+           id="energy-export-btn"
+>
+          Descargar Excel completo
+</button>
 
       </div>
 
@@ -630,14 +637,14 @@
        LIBRERÍAS Y SCRIPTS
   ========================================= -->
 
-  <!-- SUPABASE -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- CHART.JS PARA LAS GRÁFICAS -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- GRÁFICAS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- SCRIPT PRINCIPAL DEL PANEL -->
-  <script src="panel.js?v=8"></script>
+<!-- GENERACIÓN DE ARCHIVOS EXCEL -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 
-</body>
-</html>
+<!-- SCRIPT DEL PANEL -->
+<script src="panel.js?v=9"></script>

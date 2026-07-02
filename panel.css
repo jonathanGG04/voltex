@@ -475,7 +475,7 @@ body {
   box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
 
   display: grid;
-  grid-template-columns: 1.4fr 1fr auto;
+  grid-template-columns: 1.4fr 1fr auto auto;
   gap: 18px;
   align-items: end;
 
@@ -790,5 +790,30 @@ body {
 
   .energy-readings-section {
     padding: 18px;
+  }
+}
+/* =========================================
+   BOTÓN DE DESCARGA EXCEL
+========================================= */
+
+.excel-btn {
+  background-color: #16803c;
+  color: white;
+  border: none;
+}
+
+.excel-btn:hover {
+  background-color: #10672f;
+}
+
+.excel-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+  transform: none;
+}
+
+@media (max-width: 900px) {
+  .excel-btn {
+    width: 100%;
   }
 }

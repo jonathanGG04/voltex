@@ -51,8 +51,8 @@ const energyPeriodSelect = document.getElementById(
   "energy-period-select"
 );
 
-const energyRefreshBtn = document.getElementById(
-  "energy-refresh-btn"
+const energyExportBtn = document.getElementById(
+  "energy-export-btn"
 );
 
 const energyMessage = document.getElementById(
@@ -2202,6 +2202,382 @@ const cargarDispositivosEnergia =
     await cargarLecturasEnergia();
   };
 
+  /* ==============================
+   EXPORTACIÓN COMPLETA A EXCEL
+============================== */
+
+const numeroExcel = (valor) => {
+  if (
+    valor === null ||
+    valor === undefined ||
+    valor === ""
+  ) {
+    return null;
+  }
+
+  const numero = Number(valor);
+
+  return Number.isFinite(numero)
+    ? numero
+    : null;
+};
+
+const fechaPanamaExcel = (fecha) => {
+  if (!fecha) return "";
+
+  const date = new Date(fecha);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toLocaleString("es-PA", {
+    timeZone: "America/Panama",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+};
+
+const limpiarNombreArchivo = (texto) => {
+  return String(texto || "dispositivo")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9_-]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+};
+
+const obtenerHistorialCompletoExcel = async (
+  dispositivoId
+) => {
+  const lecturas = [];
+
+  const cantidadPagina = 1000;
+  let desde = 0;
+
+  while (true) {
+    const hasta =
+      desde + cantidadPagina - 1;
+
+    const { data, error } =
+      await supabaseClient
+        .from("lecturas_energia")
+        .select(
+          `
+          id,
+          fecha_servidor,
+          voltaje,
+          corriente,
+          potencia,
+          energia_kwh,
+          frecuencia,
+          factor_potencia,
+          rssi,
+          uptime_ms
+          `
+        )
+        .eq(
+          "dispositivo_id",
+          dispositivoId
+        )
+        .order("fecha_servidor", {
+          ascending: true,
+        })
+        .range(desde, hasta);
+
+    if (error) {
+      throw error;
+    }
+
+    const pagina = data || [];
+
+    lecturas.push(...pagina);
+
+    mostrarMensajeEnergia(
+      `Preparando Excel: ${lecturas.length} lecturas cargadas...`,
+      "loading"
+    );
+
+    if (pagina.length < cantidadPagina) {
+      break;
+    }
+
+    desde += cantidadPagina;
+  }
+
+  return lecturas;
+};
+
+const descargarExcelEnergia = async () => {
+  if (!energyDeviceSelect) {
+    return;
+  }
+
+  if (typeof XLSX === "undefined") {
+    mostrarMensajeEnergia(
+      "No se pudo cargar la librería de Excel.",
+      "error"
+    );
+
+    return;
+  }
+
+  const dispositivoId =
+    energyDeviceSelect.value;
+
+  const dispositivo =
+    dispositivosEnergia.find(
+      (item) =>
+        String(item.id) ===
+        String(dispositivoId)
+    );
+
+  if (!dispositivo) {
+    mostrarMensajeEnergia(
+      "Selecciona un dispositivo para descargar sus datos.",
+      "error"
+    );
+
+    return;
+  }
+
+  const textoOriginal =
+    energyExportBtn?.textContent ||
+    "Descargar Excel completo";
+
+  if (energyExportBtn) {
+    energyExportBtn.disabled = true;
+    energyExportBtn.textContent =
+      "Preparando Excel...";
+  }
+
+  mostrarMensajeEnergia(
+    "Consultando todo el historial del dispositivo...",
+    "loading"
+  );
+
+  try {
+    const lecturas =
+      await obtenerHistorialCompletoExcel(
+        dispositivo.id
+      );
+
+    if (lecturas.length === 0) {
+      mostrarMensajeEnergia(
+        "El dispositivo todavía no tiene lecturas.",
+        "error"
+      );
+
+      return;
+    }
+
+    const primeraLectura = lecturas[0];
+
+    const ultimaLectura =
+      lecturas[lecturas.length - 1];
+
+    const consumoRegistrado =
+      calcularConsumoPeriodo(lecturas);
+
+    const filasResumen = [
+      {
+        Campo: "Empresa",
+        Valor: "Voltex Innovations PA",
+      },
+      {
+        Campo: "Código del dispositivo",
+        Valor: dispositivo.codigo || "",
+      },
+      {
+        Campo: "Nombre del cliente",
+        Valor:
+          dispositivo.nombre_cliente || "",
+      },
+      {
+        Campo: "Ubicación",
+        Valor: dispositivo.ubicacion || "",
+      },
+      {
+        Campo: "Distribuidora",
+        Valor:
+          dispositivo.distribuidora || "",
+      },
+      {
+        Campo: "Categoría tarifaria",
+        Valor:
+          dispositivo.categoria_tarifaria ||
+          "",
+      },
+      {
+        Campo: "Cantidad de lecturas",
+        Valor: lecturas.length,
+      },
+      {
+        Campo: "Primera lectura",
+        Valor: fechaPanamaExcel(
+          primeraLectura.fecha_servidor
+        ),
+      },
+      {
+        Campo: "Última lectura",
+        Valor: fechaPanamaExcel(
+          ultimaLectura.fecha_servidor
+        ),
+      },
+      {
+        Campo: "Consumo registrado (kWh)",
+        Valor: Number(
+          consumoRegistrado.toFixed(6)
+        ),
+      },
+      {
+        Campo: "Fecha de exportación",
+        Valor: fechaPanamaExcel(
+          new Date().toISOString()
+        ),
+      },
+    ];
+
+    const filasLecturas = lecturas.map(
+      (lectura) => ({
+        ID: String(lectura.id),
+
+        "Fecha y hora Panamá":
+          fechaPanamaExcel(
+            lectura.fecha_servidor
+          ),
+
+        "Fecha servidor UTC":
+          lectura.fecha_servidor || "",
+
+        "Voltaje (V)":
+          numeroExcel(lectura.voltaje),
+
+        "Corriente (A)":
+          numeroExcel(lectura.corriente),
+
+        "Potencia activa (W)":
+          numeroExcel(lectura.potencia),
+
+        "Energía acumulada (kWh)":
+          numeroExcel(
+            lectura.energia_kwh
+          ),
+
+        "Frecuencia (Hz)":
+          numeroExcel(
+            lectura.frecuencia
+          ),
+
+        "Factor de potencia":
+          numeroExcel(
+            lectura.factor_potencia
+          ),
+
+        "Señal Wi-Fi (dBm)":
+          numeroExcel(lectura.rssi),
+
+        "Tiempo encendido (ms)":
+          numeroExcel(
+            lectura.uptime_ms
+          ),
+      })
+    );
+
+    const libro =
+      XLSX.utils.book_new();
+
+    const hojaResumen =
+      XLSX.utils.json_to_sheet(
+        filasResumen
+      );
+
+    const hojaLecturas =
+      XLSX.utils.json_to_sheet(
+        filasLecturas
+      );
+
+    hojaResumen["!cols"] = [
+      { wch: 30 },
+      { wch: 38 },
+    ];
+
+    hojaLecturas["!cols"] = [
+      { wch: 12 },
+      { wch: 23 },
+      { wch: 29 },
+      { wch: 14 },
+      { wch: 16 },
+      { wch: 21 },
+      { wch: 25 },
+      { wch: 17 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 22 },
+    ];
+
+    if (hojaLecturas["!ref"]) {
+      hojaLecturas["!autofilter"] = {
+        ref: hojaLecturas["!ref"],
+      };
+    }
+
+    XLSX.utils.book_append_sheet(
+      libro,
+      hojaResumen,
+      "Resumen"
+    );
+
+    XLSX.utils.book_append_sheet(
+      libro,
+      hojaLecturas,
+      "Lecturas"
+    );
+
+    const fechaArchivo = new Date()
+      .toISOString()
+      .slice(0, 10);
+
+    const codigoArchivo =
+      limpiarNombreArchivo(
+        dispositivo.codigo
+      );
+
+    const nombreArchivo =
+      `Voltex_${codigoArchivo}_${fechaArchivo}.xlsx`;
+
+    XLSX.writeFile(
+      libro,
+      nombreArchivo,
+      {
+        compression: true,
+      }
+    );
+
+    mostrarMensajeEnergia(
+      `Excel generado correctamente con ${lecturas.length} lecturas.`,
+      "success"
+    );
+  } catch (error) {
+    console.error(error);
+
+    mostrarMensajeEnergia(
+      "No se pudo generar el archivo Excel.",
+      "error"
+    );
+  } finally {
+    if (energyExportBtn) {
+      energyExportBtn.disabled = false;
+      energyExportBtn.textContent =
+        textoOriginal;
+    }
+  }
+};
+
 /* ==============================
    EVENTOS DEL MONITOREO
 ============================== */
@@ -2224,6 +2600,12 @@ if (energyRefreshBtn) {
   energyRefreshBtn.addEventListener(
     "click",
     cargarDispositivosEnergia
+  );
+}
+if (energyExportBtn) {
+  energyExportBtn.addEventListener(
+    "click",
+    descargarExcelEnergia
   );
 }
 /* ==============================
