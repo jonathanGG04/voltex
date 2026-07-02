@@ -2,18 +2,37 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
   <title>Panel Interno | Voltex Innovations PA</title>
 
-  <meta name="robots" content="noindex, nofollow" />
+  <meta
+    name="robots"
+    content="noindex, nofollow"
+  />
 
-  <link rel="stylesheet" href="panel.css?v=7" />
+  <link
+    rel="stylesheet"
+    href="panel.css?v=8"
+  />
 </head>
 
 <body>
-  <main class="login-screen" id="login-screen">
+
+  <!-- ========================================
+       PANTALLA DE INICIO DE SESIÓN
+  ========================================= -->
+
+  <main
+    class="login-screen"
+    id="login-screen"
+  >
     <section class="login-card">
+
       <div class="login-logo">
         <span>Voltex</span> Innovations PA
       </div>
@@ -22,104 +41,217 @@
 
       <p>
         Acceso exclusivo para la gestión de cotizaciones solares,
-        clientes y seguimiento comercial de Voltex.
+        clientes, seguimiento comercial y monitoreo energético
+        de los equipos Voltex.
       </p>
 
-      <form id="login-form" class="login-form">
+      <form
+        id="login-form"
+        class="login-form"
+      >
+
         <div class="form-group">
-          <label for="login-email">Correo</label>
+          <label for="login-email">
+            Correo
+          </label>
+
           <input
             type="email"
             id="login-email"
             placeholder="voltexinnovationspa@gmail.com"
+            autocomplete="email"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="login-password">Contraseña</label>
+          <label for="login-password">
+            Contraseña
+          </label>
+
           <input
             type="password"
             id="login-password"
             placeholder="Ingresa tu contraseña"
+            autocomplete="current-password"
             required
           />
         </div>
 
-        <button type="submit" class="btn primary">
+        <button
+          type="submit"
+          class="btn primary"
+        >
           Iniciar sesión
         </button>
 
-        <p id="login-message" class="login-message"></p>
+        <p
+          id="login-message"
+          class="login-message"
+        ></p>
+
       </form>
     </section>
   </main>
 
-  <main class="dashboard hidden" id="dashboard">
+
+  <!-- ========================================
+       PANEL INTERNO
+  ========================================= -->
+
+  <main
+    class="dashboard hidden"
+    id="dashboard"
+  >
+
+    <!-- ENCABEZADO -->
+
     <header class="dashboard-header">
+
       <div>
-        <h1><span>Voltex</span> Panel Interno</h1>
-        <p>Gestión de solicitudes solares y oportunidades comerciales.</p>
+        <h1>
+          <span>Voltex</span> Panel Interno
+        </h1>
+
+        <p>
+          Gestión de solicitudes solares, oportunidades comerciales
+          y monitoreo energético.
+        </p>
       </div>
 
-      <button class="btn logout" id="logout-btn">
+      <button
+        type="button"
+        class="btn logout"
+        id="logout-btn"
+      >
         Cerrar sesión
       </button>
+
     </header>
 
+
+    <!-- ========================================
+         RESUMEN DE COTIZACIONES
+    ========================================= -->
+
     <section class="summary-grid">
+
       <div class="summary-card">
         <span>Total solicitudes</span>
-        <strong id="total-cotizaciones">0</strong>
+
+        <strong id="total-cotizaciones">
+          0
+        </strong>
       </div>
 
       <div class="summary-card">
         <span>Nuevas</span>
-        <strong id="total-nuevas">0</strong>
+
+        <strong id="total-nuevas">
+          0
+        </strong>
       </div>
 
       <div class="summary-card">
         <span>Alta prioridad</span>
-        <strong id="total-alta-prioridad">0</strong>
+
+        <strong id="total-alta-prioridad">
+          0
+        </strong>
       </div>
 
       <div class="summary-card">
         <span>Valor estimado</span>
-        <strong id="valor-total-estimado">B/. 0.00</strong>
+
+        <strong id="valor-total-estimado">
+          B/. 0.00
+        </strong>
       </div>
 
       <div class="summary-card">
         <span>Utilidad estimada</span>
-        <strong id="utilidad-total-estimada">B/. 0.00</strong>
+
+        <strong id="utilidad-total-estimada">
+          B/. 0.00
+        </strong>
       </div>
+
     </section>
 
+
+    <!-- ========================================
+         FILTROS DE COTIZACIONES
+    ========================================= -->
+
     <section class="filters-section">
+
       <div class="filter-box">
-        <label for="estado-filter">Filtrar por estado</label>
+        <label for="estado-filter">
+          Filtrar por estado
+        </label>
+
         <select id="estado-filter">
-          <option value="Todos">Todos</option>
-          <option value="Nuevo">Nuevo</option>
-          <option value="Contactado">Contactado</option>
-          <option value="Visita programada">Visita programada</option>
-          <option value="Cotizado">Cotizado</option>
-          <option value="Ganado">Ganado</option>
-          <option value="Perdido">Perdido</option>
+          <option value="Todos">
+            Todos
+          </option>
+
+          <option value="Nuevo">
+            Nuevo
+          </option>
+
+          <option value="Contactado">
+            Contactado
+          </option>
+
+          <option value="Visita programada">
+            Visita programada
+          </option>
+
+          <option value="Cotizado">
+            Cotizado
+          </option>
+
+          <option value="Ganado">
+            Ganado
+          </option>
+
+          <option value="Perdido">
+            Perdido
+          </option>
         </select>
       </div>
 
+
       <div class="filter-box">
-        <label for="prioridad-filter">Filtrar por prioridad</label>
+        <label for="prioridad-filter">
+          Filtrar por prioridad
+        </label>
+
         <select id="prioridad-filter">
-          <option value="Todas">Todas</option>
-          <option value="Alta">Alta</option>
-          <option value="Media">Media</option>
-          <option value="Normal">Normal</option>
+          <option value="Todas">
+            Todas
+          </option>
+
+          <option value="Alta">
+            Alta
+          </option>
+
+          <option value="Media">
+            Media
+          </option>
+
+          <option value="Normal">
+            Normal
+          </option>
         </select>
       </div>
+
 
       <div class="filter-box search-box">
-        <label for="search-input">Buscar cliente</label>
+        <label for="search-input">
+          Buscar cliente
+        </label>
+
         <input
           type="text"
           id="search-input"
@@ -127,26 +259,385 @@
         />
       </div>
 
-      <button class="btn secondary" id="refresh-btn">
+
+      <button
+        type="button"
+        class="btn secondary"
+        id="refresh-btn"
+      >
         Actualizar
       </button>
+
     </section>
 
-    <p id="panel-message" class="panel-message"></p>
+
+    <p
+      id="panel-message"
+      class="panel-message"
+    ></p>
+
+
+    <!-- ========================================
+         SOLICITUDES DE COTIZACIÓN
+    ========================================= -->
 
     <section class="quotes-section">
+
       <div class="section-title">
-        <h2>Solicitudes recibidas</h2>
+        <h2>
+          Solicitudes recibidas
+        </h2>
+
         <p>
-          Revisa clientes, precios recomendados, prioridad y estado comercial.
+          Revisa clientes, precios recomendados, prioridad
+          y estado comercial.
         </p>
       </div>
 
-      <div class="quotes-grid" id="quotes-grid"></div>
+      <div
+        class="quotes-grid"
+        id="quotes-grid"
+      ></div>
+
     </section>
+
+
+    <!-- ========================================
+         MONITOREO ENERGÉTICO
+    ========================================= -->
+
+    <section
+      id="monitoreo-energia"
+      class="energy-section"
+    >
+
+      <div class="section-title">
+        <h2>
+          Monitoreo energético
+        </h2>
+
+        <p>
+          Consulta las mediciones enviadas por los equipos Voltex
+          instalados en cada cliente.
+        </p>
+      </div>
+
+
+      <!-- CONTROLES DEL MONITOREO -->
+
+      <div class="energy-controls">
+
+        <div class="filter-box">
+          <label for="energy-device-select">
+            Dispositivo
+          </label>
+
+          <select id="energy-device-select">
+            <option value="">
+              Cargando dispositivos...
+            </option>
+          </select>
+        </div>
+
+
+        <div class="filter-box">
+          <label for="energy-period-select">
+            Periodo
+          </label>
+
+          <select id="energy-period-select">
+            <option value="24">
+              Últimas 24 horas
+            </option>
+
+            <option value="168">
+              Últimos 7 días
+            </option>
+
+            <option value="720">
+              Últimos 30 días
+            </option>
+          </select>
+        </div>
+
+
+        <button
+          type="button"
+          class="btn secondary"
+          id="energy-refresh-btn"
+        >
+          Actualizar mediciones
+        </button>
+
+      </div>
+
+
+      <p
+        id="energy-message"
+        class="panel-message"
+      ></p>
+
+
+      <!-- INFORMACIÓN DEL DISPOSITIVO -->
+
+      <div class="energy-device-header">
+
+        <div>
+          <span>
+            Cliente o dispositivo
+          </span>
+
+          <strong id="energy-device-name">
+            --
+          </strong>
+        </div>
+
+
+        <div>
+          <span>
+            Estado
+          </span>
+
+          <strong id="energy-device-status">
+            Sin datos
+          </strong>
+        </div>
+
+
+        <div>
+          <span>
+            Último contacto
+          </span>
+
+          <strong id="energy-last-contact">
+            --
+          </strong>
+        </div>
+
+      </div>
+
+
+      <!-- TARJETAS DE MEDICIONES -->
+
+      <div class="energy-summary-grid">
+
+        <div class="energy-summary-card">
+          <span>
+            Voltaje actual
+          </span>
+
+          <strong id="energy-voltage">
+            -- V
+          </strong>
+        </div>
+
+
+        <div class="energy-summary-card">
+          <span>
+            Corriente actual
+          </span>
+
+          <strong id="energy-current">
+            -- A
+          </strong>
+        </div>
+
+
+        <div class="energy-summary-card">
+          <span>
+            Potencia activa
+          </span>
+
+          <strong id="energy-power">
+            -- W
+          </strong>
+        </div>
+
+
+        <div class="energy-summary-card">
+          <span>
+            Energía acumulada
+          </span>
+
+          <strong id="energy-total">
+            -- kWh
+          </strong>
+        </div>
+
+
+        <div class="energy-summary-card">
+          <span>
+            Frecuencia
+          </span>
+
+          <strong id="energy-frequency">
+            -- Hz
+          </strong>
+        </div>
+
+
+        <div class="energy-summary-card">
+          <span>
+            Factor de potencia
+          </span>
+
+          <strong id="energy-pf">
+            --
+          </strong>
+        </div>
+
+
+        <div class="energy-summary-card">
+          <span>
+            Señal Wi-Fi
+          </span>
+
+          <strong id="energy-rssi">
+            -- dBm
+          </strong>
+        </div>
+
+
+        <div class="energy-summary-card">
+          <span>
+            Consumo del periodo
+          </span>
+
+          <strong id="energy-period-consumption">
+            -- kWh
+          </strong>
+        </div>
+
+
+        <div class="energy-summary-card">
+          <span>
+            Costo estimado
+          </span>
+
+          <strong id="energy-estimated-cost">
+            B/. --
+          </strong>
+        </div>
+
+      </div>
+
+
+      <!-- GRÁFICAS -->
+
+      <div class="energy-charts-grid">
+
+        <article class="energy-chart-card">
+          <h3>
+            Potencia activa
+          </h3>
+
+          <div class="energy-chart-container">
+            <canvas id="energy-power-chart"></canvas>
+          </div>
+        </article>
+
+
+        <article class="energy-chart-card">
+          <h3>
+            Consumo acumulado
+          </h3>
+
+          <div class="energy-chart-container">
+            <canvas id="energy-consumption-chart"></canvas>
+          </div>
+        </article>
+
+
+        <article class="energy-chart-card">
+          <h3>
+            Voltaje
+          </h3>
+
+          <div class="energy-chart-container">
+            <canvas id="energy-voltage-chart"></canvas>
+          </div>
+        </article>
+
+
+        <article class="energy-chart-card">
+          <h3>
+            Corriente
+          </h3>
+
+          <div class="energy-chart-container">
+            <canvas id="energy-current-chart"></canvas>
+          </div>
+        </article>
+
+      </div>
+
+
+      <!-- TABLA DE ÚLTIMAS LECTURAS -->
+
+      <div class="energy-readings-section">
+
+        <div class="energy-readings-header">
+          <div>
+            <h3>
+              Últimas lecturas
+            </h3>
+
+            <p>
+              Historial reciente enviado por el monitor energético.
+            </p>
+          </div>
+        </div>
+
+
+        <div class="energy-table-wrapper">
+
+          <table class="energy-table">
+
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Voltaje</th>
+                <th>Corriente</th>
+                <th>Potencia</th>
+                <th>Energía</th>
+                <th>Frecuencia</th>
+                <th>FP</th>
+              </tr>
+            </thead>
+
+            <tbody id="energy-readings-body">
+
+              <tr>
+                <td colspan="7">
+                  Selecciona un dispositivo para mostrar sus lecturas.
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
 
+
+  <!-- ========================================
+       LIBRERÍAS Y SCRIPTS
+  ========================================= -->
+
+  <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="panel.js?v=7"></script>
+
+  <!-- CHART.JS PARA LAS GRÁFICAS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- SCRIPT PRINCIPAL DEL PANEL -->
+  <script src="panel.js?v=8"></script>
+
 </body>
 </html>

@@ -438,3 +438,357 @@ body {
 .quote-doc-btn:hover {
   background-color: #00a8d6;
 }
+/* =========================================
+   MONITOREO ENERGÉTICO
+========================================= */
+
+.energy-section {
+  margin-top: 55px;
+  padding-top: 35px;
+  border-top: 2px solid #dce4ea;
+}
+
+.energy-section .section-title {
+  margin-bottom: 24px;
+}
+
+.energy-section .section-title h2 {
+  color: #081c2f;
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+
+.energy-section .section-title p {
+  color: #555;
+  max-width: 800px;
+}
+
+
+/* =========================================
+   CONTROLES DEL MONITOREO
+========================================= */
+
+.energy-controls {
+  background-color: white;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
+
+  display: grid;
+  grid-template-columns: 1.4fr 1fr auto;
+  gap: 18px;
+  align-items: end;
+
+  margin-bottom: 20px;
+}
+
+.energy-controls select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccd3da;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: white;
+}
+
+.energy-controls select:focus {
+  outline: none;
+  border-color: #00c8ff;
+  box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.18);
+}
+
+
+/* =========================================
+   INFORMACIÓN DEL DISPOSITIVO
+========================================= */
+
+.energy-device-header {
+  display: grid;
+  grid-template-columns: 1.5fr 0.7fr 1fr;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.energy-device-header > div {
+  background-color: #081c2f;
+  padding: 20px;
+  border-radius: 14px;
+  color: white;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+.energy-device-header span {
+  display: block;
+  color: #cfd8e2;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.energy-device-header strong {
+  color: #00c8ff;
+  font-size: 17px;
+}
+
+
+/* ESTADOS DEL EQUIPO */
+
+.energy-status-online {
+  color: #7ee787 !important;
+}
+
+.energy-status-warning {
+  color: #ffd166 !important;
+}
+
+.energy-status-offline {
+  color: #ff8f8f !important;
+}
+
+
+/* =========================================
+   TARJETAS DE MEDICIÓN
+========================================= */
+
+.energy-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.energy-summary-card {
+  background-color: white;
+  padding: 22px;
+  border-radius: 15px;
+  border-left: 5px solid #00c8ff;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease;
+}
+
+.energy-summary-card:hover {
+  transform: translateY(-4px);
+}
+
+.energy-summary-card span {
+  display: block;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.energy-summary-card strong {
+  display: block;
+  color: #081c2f;
+  font-size: 23px;
+}
+
+
+/* =========================================
+   GRÁFICAS
+========================================= */
+
+.energy-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  margin-bottom: 30px;
+}
+
+.energy-chart-card {
+  background-color: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  min-width: 0;
+}
+
+.energy-chart-card h3 {
+  color: #081c2f;
+  font-size: 19px;
+  margin-bottom: 18px;
+}
+
+.energy-chart-container {
+  position: relative;
+  width: 100%;
+  height: 320px;
+}
+
+.energy-chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+
+/* =========================================
+   TABLA DE LECTURAS
+========================================= */
+
+.energy-readings-section {
+  background-color: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+}
+
+.energy-readings-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.energy-readings-header h3 {
+  color: #081c2f;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.energy-readings-header p {
+  color: #666;
+  font-size: 14px;
+}
+
+.energy-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.energy-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+}
+
+.energy-table thead {
+  background-color: #081c2f;
+  color: white;
+}
+
+.energy-table th {
+  padding: 13px 12px;
+  text-align: left;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.energy-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e2e8ee;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.energy-table tbody tr:nth-child(even) {
+  background-color: #f7f9fb;
+}
+
+.energy-table tbody tr:hover {
+  background-color: #eefaff;
+}
+
+.energy-table td[colspan] {
+  text-align: center;
+  color: #666;
+  padding: 28px;
+}
+
+
+/* =========================================
+   MENSAJES DEL MONITOREO
+========================================= */
+
+#energy-message {
+  min-height: 22px;
+  margin-bottom: 16px;
+}
+
+#energy-message.success {
+  color: #008a3d;
+}
+
+#energy-message.error {
+  color: #d93636;
+}
+
+#energy-message.loading {
+  color: #005f8a;
+}
+
+
+/* =========================================
+   RESPONSIVE MONITOREO
+========================================= */
+
+@media (max-width: 1200px) {
+  .energy-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .energy-device-header {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .energy-device-header > div:first-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 900px) {
+  .energy-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .energy-controls .btn {
+    width: 100%;
+  }
+
+  .energy-charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .energy-chart-container {
+    height: 290px;
+  }
+}
+
+@media (max-width: 650px) {
+  .energy-section {
+    margin-top: 40px;
+  }
+
+  .energy-section .section-title h2 {
+    font-size: 26px;
+  }
+
+  .energy-device-header {
+    grid-template-columns: 1fr;
+  }
+
+  .energy-device-header > div:first-child {
+    grid-column: auto;
+  }
+
+  .energy-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .energy-summary-card strong {
+    font-size: 21px;
+  }
+
+  .energy-chart-card {
+    padding: 18px;
+  }
+
+  .energy-chart-container {
+    height: 260px;
+  }
+
+  .energy-readings-section {
+    padding: 18px;
+  }
+}

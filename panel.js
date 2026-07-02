@@ -39,6 +39,86 @@ const valorTotalEstimado = document.getElementById("valor-total-estimado");
 const utilidadTotalEstimada = document.getElementById("utilidad-total-estimada");
 
 let cotizaciones = [];
+/* ==============================
+   MONITOREO ENERGÉTICO
+============================== */
+
+const energyDeviceSelect = document.getElementById(
+  "energy-device-select"
+);
+
+const energyPeriodSelect = document.getElementById(
+  "energy-period-select"
+);
+
+const energyRefreshBtn = document.getElementById(
+  "energy-refresh-btn"
+);
+
+const energyMessage = document.getElementById(
+  "energy-message"
+);
+
+const energyDeviceName = document.getElementById(
+  "energy-device-name"
+);
+
+const energyDeviceStatus = document.getElementById(
+  "energy-device-status"
+);
+
+const energyLastContact = document.getElementById(
+  "energy-last-contact"
+);
+
+const energyVoltage = document.getElementById(
+  "energy-voltage"
+);
+
+const energyCurrent = document.getElementById(
+  "energy-current"
+);
+
+const energyPower = document.getElementById(
+  "energy-power"
+);
+
+const energyTotal = document.getElementById(
+  "energy-total"
+);
+
+const energyFrequency = document.getElementById(
+  "energy-frequency"
+);
+
+const energyPf = document.getElementById(
+  "energy-pf"
+);
+
+const energyRssi = document.getElementById(
+  "energy-rssi"
+);
+
+const energyPeriodConsumption = document.getElementById(
+  "energy-period-consumption"
+);
+
+const energyEstimatedCost = document.getElementById(
+  "energy-estimated-cost"
+);
+
+const energyReadingsBody = document.getElementById(
+  "energy-readings-body"
+);
+
+let dispositivosEnergia = [];
+
+let graficasEnergia = {
+  potencia: null,
+  consumo: null,
+  voltaje: null,
+  corriente: null,
+};
 
 /* ==============================
    FUNCIONES DE FORMATO
@@ -692,6 +772,7 @@ const verificarSesion = async () => {
     loginScreen.classList.add("hidden");
     dashboard.classList.remove("hidden");
     await cargarCotizaciones();
+    await cargarDispositivosEnergia();
   } else {
     loginScreen.classList.remove("hidden");
     dashboard.classList.add("hidden");
@@ -724,6 +805,7 @@ loginForm.addEventListener("submit", async (event) => {
   dashboard.classList.remove("hidden");
 
   await cargarCotizaciones();
+  await cargarDispositivosEnergia();
 });
 
 logoutBtn.addEventListener("click", async () => {
@@ -1151,6 +1233,999 @@ quotesGrid.addEventListener("click", (event) => {
   generarCotizacion(cotizacion);
 });
 
+/* ==============================
+   FUNCIONES DEL MONITOREO ENERGÉTICO
+============================== */
+
+const mostrarMensajeEnergia = (
+  mensaje,
+  tipo = ""
+) => {
+  if (!energyMessage) return;
+
+  energyMessage.textContent = mensaje;
+  energyMessage.className = "panel-message";
+
+  if (tipo) {
+    energyMessage.classList.add(tipo);
+  }
+};
+
+const formatoFechaEnergia = (fecha) => {
+  if (!fecha) return "--";
+
+  const date = new Date(fecha);
+
+  return date.toLocaleString("es-PA", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+};
+
+const valorNumerico = (
+  valor,
+  decimales = 2,
+  unidad = ""
+) => {
+  const numero = Number(valor);
+
+  if (!Number.isFinite(numero)) {
+    return `--${unidad ? ` ${unidad}` : ""}`;
+  }
+
+  return `${numero.toFixed(decimales)}${
+    unidad ? ` ${unidad}` : ""
+  }`;
+};
+
+const actualizarEstadoDispositivo = (
+  dispositivo
+) => {
+  if (
+    !energyDeviceStatus ||
+    !energyLastContact
+  ) {
+    return;
+  }
+
+  energyDeviceStatus.className = "";
+
+  if (!dispositivo?.ultimo_contacto) {
+    energyDeviceStatus.textContent = "Sin datos";
+    energyDeviceStatus.classList.add(
+      "energy-status-offline"
+    );
+
+    energyLastContact.textContent = "--";
+    return;
+  }
+
+  const ultimoContacto = new Date(
+    dispositivo.ultimo_contacto
+  );
+
+  const diferenciaSegundos =
+    (Date.now() - ultimoContacto.getTime()) /
+    1000;
+
+  const intervalo = Number(
+    dispositivo.intervalo_envio_segundos || 60
+  );
+
+  if (diferenciaSegundos <= intervalo * 3) {
+    energyDeviceStatus.textContent = "En línea";
+    energyDeviceStatus.classList.add(
+      "energy-status-online"
+    );
+  } else if (diferenciaSegundos <= 600) {
+    energyDeviceStatus.textContent =
+      "Sin actualización reciente";
+
+    energyDeviceStatus.classList.add(
+      "energy-status-warning"
+    );
+  } else {
+    energyDeviceStatus.textContent =
+      "Fuera de línea";
+
+    energyDeviceStatus.classList.add(
+      "energy-status-offline"
+    );
+  }
+
+  energyLastContact.textContent =
+    formatoFechaEnergia(
+      dispositivo.ultimo_contacto
+    );
+};
+
+const calcularConsumoPeriodo = (
+  lecturas
+) => {
+  if (!lecturas || lecturas.length < 2) {
+    return 0;
+  }
+
+  let consumo = 0;
+  let energiaAnterior = null;
+
+  lecturas.forEach((lectura) => {
+    const energiaActual = Number(
+      lectura.energia_kwh
+    );
+
+    if (!Number.isFinite(energiaActual)) {
+      return;
+    }
+
+    if (energiaAnterior !== null) {
+      const diferencia =
+        energiaActual - energiaAnterior;
+
+      if (diferencia >= 0) {
+        consumo += diferencia;
+      } else {
+        /*
+          Si el PZEM fue reiniciado y la energía
+          volvió a cero, se suma el nuevo valor.
+        */
+        consumo += energiaActual;
+      }
+    }
+
+    energiaAnterior = energiaActual;
+  });
+
+  return consumo;
+};
+
+const calcularCostoPorBloques = (
+  consumoMensual,
+  tarifa
+) => {
+  const consumo = Math.max(
+    Number(consumoMensual || 0),
+    0
+  );
+
+  const bloque1 = Math.min(consumo, 300);
+
+  const bloque2 = Math.min(
+    Math.max(consumo - 300, 0),
+    450
+  );
+
+  const bloque3 = Math.max(
+    consumo - 750,
+    0
+  );
+
+  return (
+    Number(tarifa.cargo_fijo || 0) +
+    bloque1 *
+      Number(tarifa.precio_bloque_1 || 0) +
+    bloque2 *
+      Number(tarifa.precio_bloque_2 || 0) +
+    bloque3 *
+      Number(tarifa.precio_bloque_3 || 0)
+  );
+};
+
+const obtenerTarifaDispositivo = async (
+  dispositivo
+) => {
+  if (!dispositivo?.distribuidora) {
+    return {
+      tarifa: null,
+      aproximada: true,
+    };
+  }
+
+  const categoria =
+    dispositivo.categoria_tarifaria || "BTS";
+
+  const fechaActual = new Date()
+    .toISOString()
+    .slice(0, 10);
+
+  const {
+    data: tarifaVigente,
+    error: errorVigente,
+  } = await supabaseClient
+    .from("tarifas_energia")
+    .select(
+      `
+      distribuidora,
+      categoria,
+      vigente_desde,
+      vigente_hasta,
+      cargo_fijo,
+      precio_bloque_1,
+      precio_bloque_2,
+      precio_bloque_3
+      `
+    )
+    .eq(
+      "distribuidora",
+      dispositivo.distribuidora
+    )
+    .eq("categoria", categoria)
+    .lte("vigente_desde", fechaActual)
+    .gte("vigente_hasta", fechaActual)
+    .order("vigente_desde", {
+      ascending: false,
+    })
+    .limit(1)
+    .maybeSingle();
+
+  if (errorVigente) {
+    console.error(errorVigente);
+  }
+
+  if (tarifaVigente) {
+    return {
+      tarifa: tarifaVigente,
+      aproximada: false,
+    };
+  }
+
+  /*
+    Si todavía no se ha cargado una tarifa
+    para el periodo actual, utiliza la última
+    tarifa registrada como aproximación.
+  */
+
+  const {
+    data: ultimaTarifa,
+    error: errorUltima,
+  } = await supabaseClient
+    .from("tarifas_energia")
+    .select(
+      `
+      distribuidora,
+      categoria,
+      vigente_desde,
+      vigente_hasta,
+      cargo_fijo,
+      precio_bloque_1,
+      precio_bloque_2,
+      precio_bloque_3
+      `
+    )
+    .eq(
+      "distribuidora",
+      dispositivo.distribuidora
+    )
+    .eq("categoria", categoria)
+    .order("vigente_desde", {
+      ascending: false,
+    })
+    .limit(1)
+    .maybeSingle();
+
+  if (errorUltima) {
+    console.error(errorUltima);
+  }
+
+  return {
+    tarifa: ultimaTarifa || null,
+    aproximada: true,
+  };
+};
+
+const calcularCostoPeriodo = async (
+  dispositivo,
+  consumoPeriodo,
+  horasPeriodo
+) => {
+  const resultadoTarifa =
+    await obtenerTarifaDispositivo(
+      dispositivo
+    );
+
+  if (resultadoTarifa.tarifa) {
+    /*
+      Se proyecta el consumo del periodo a un
+      mes de 30 días para aplicar los bloques.
+      Luego el costo mensual se prorratea.
+    */
+
+    const horasMes = 720;
+
+    const consumoMensualEstimado =
+      horasPeriodo > 0
+        ? consumoPeriodo *
+          (horasMes / horasPeriodo)
+        : consumoPeriodo;
+
+    const costoMensualEstimado =
+      calcularCostoPorBloques(
+        consumoMensualEstimado,
+        resultadoTarifa.tarifa
+      );
+
+    return {
+      costo:
+        costoMensualEstimado *
+        (horasPeriodo / horasMes),
+
+      aproximado:
+        resultadoTarifa.aproximada,
+    };
+  }
+
+  const tarifaPromedio = Number(
+    dispositivo.tarifa_kwh || 0
+  );
+
+  return {
+    costo:
+      consumoPeriodo * tarifaPromedio,
+
+    aproximado: true,
+  };
+};
+
+const obtenerLecturasPaginadas = async (
+  dispositivoId,
+  fechaDesde
+) => {
+  const lecturas = [];
+
+  const cantidadPagina = 1000;
+  let desde = 0;
+  let continuar = true;
+
+  while (continuar) {
+    const hasta =
+      desde + cantidadPagina - 1;
+
+    const { data, error } =
+      await supabaseClient
+        .from("lecturas_energia")
+        .select(
+          `
+          id,
+          fecha_servidor,
+          voltaje,
+          corriente,
+          potencia,
+          energia_kwh,
+          frecuencia,
+          factor_potencia,
+          rssi
+          `
+        )
+        .eq(
+          "dispositivo_id",
+          dispositivoId
+        )
+        .gte(
+          "fecha_servidor",
+          fechaDesde
+        )
+        .order("fecha_servidor", {
+          ascending: true,
+        })
+        .range(desde, hasta);
+
+    if (error) {
+      throw error;
+    }
+
+    const pagina = data || [];
+
+    lecturas.push(...pagina);
+
+    if (pagina.length < cantidadPagina) {
+      continuar = false;
+    } else {
+      desde += cantidadPagina;
+    }
+
+    /*
+      Límite de seguridad para evitar una
+      descarga excesiva accidental.
+    */
+    if (lecturas.length >= 50000) {
+      continuar = false;
+    }
+  }
+
+  return lecturas;
+};
+
+const reducirLecturasParaGrafica = (
+  lecturas,
+  maximoPuntos = 500
+) => {
+  if (lecturas.length <= maximoPuntos) {
+    return lecturas;
+  }
+
+  const resultado = [];
+  const paso =
+    (lecturas.length - 1) /
+    (maximoPuntos - 1);
+
+  for (
+    let indice = 0;
+    indice < maximoPuntos;
+    indice++
+  ) {
+    resultado.push(
+      lecturas[
+        Math.round(indice * paso)
+      ]
+    );
+  }
+
+  return resultado;
+};
+
+const destruirGraficasEnergia = () => {
+  Object.keys(graficasEnergia).forEach(
+    (clave) => {
+      if (graficasEnergia[clave]) {
+        graficasEnergia[clave].destroy();
+        graficasEnergia[clave] = null;
+      }
+    }
+  );
+};
+
+const crearGraficaEnergia = (
+  canvasId,
+  etiqueta,
+  etiquetas,
+  valores,
+  unidad
+) => {
+  const canvas =
+    document.getElementById(canvasId);
+
+  if (
+    !canvas ||
+    typeof Chart === "undefined"
+  ) {
+    return null;
+  }
+
+  return new Chart(canvas, {
+    type: "line",
+
+    data: {
+      labels: etiquetas,
+
+      datasets: [
+        {
+          label: `${etiqueta} (${unidad})`,
+          data: valores,
+          borderColor: "#00c8ff",
+          backgroundColor:
+            "rgba(0, 200, 255, 0.15)",
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          fill: true,
+          tension: 0.2,
+          spanGaps: true,
+        },
+      ],
+    },
+
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+
+      interaction: {
+        mode: "index",
+        intersect: false,
+      },
+
+      scales: {
+        x: {
+          ticks: {
+            maxTicksLimit: 10,
+          },
+        },
+
+        y: {
+          beginAtZero: false,
+
+          title: {
+            display: true,
+            text: unidad,
+          },
+        },
+      },
+
+      plugins: {
+        legend: {
+          display: true,
+        },
+      },
+    },
+  });
+};
+
+const renderizarGraficasEnergia = (
+  lecturas
+) => {
+  destruirGraficasEnergia();
+
+  const lecturasReducidas =
+    reducirLecturasParaGrafica(lecturas);
+
+  const etiquetas =
+    lecturasReducidas.map((lectura) => {
+      const fecha = new Date(
+        lectura.fecha_servidor
+      );
+
+      return fecha.toLocaleString(
+        "es-PA",
+        {
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        }
+      );
+    });
+
+  graficasEnergia.potencia =
+    crearGraficaEnergia(
+      "energy-power-chart",
+      "Potencia",
+      etiquetas,
+      lecturasReducidas.map(
+        (lectura) =>
+          Number(lectura.potencia)
+      ),
+      "W"
+    );
+
+  graficasEnergia.consumo =
+    crearGraficaEnergia(
+      "energy-consumption-chart",
+      "Energía acumulada",
+      etiquetas,
+      lecturasReducidas.map(
+        (lectura) =>
+          Number(lectura.energia_kwh)
+      ),
+      "kWh"
+    );
+
+  graficasEnergia.voltaje =
+    crearGraficaEnergia(
+      "energy-voltage-chart",
+      "Voltaje",
+      etiquetas,
+      lecturasReducidas.map(
+        (lectura) =>
+          Number(lectura.voltaje)
+      ),
+      "V"
+    );
+
+  graficasEnergia.corriente =
+    crearGraficaEnergia(
+      "energy-current-chart",
+      "Corriente",
+      etiquetas,
+      lecturasReducidas.map(
+        (lectura) =>
+          Number(lectura.corriente)
+      ),
+      "A"
+    );
+};
+
+const renderizarTablaEnergia = (
+  lecturas
+) => {
+  if (!energyReadingsBody) return;
+
+  const ultimasLecturas = [
+    ...lecturas,
+  ]
+    .reverse()
+    .slice(0, 50);
+
+  if (ultimasLecturas.length === 0) {
+    energyReadingsBody.innerHTML = `
+      <tr>
+        <td colspan="7">
+          No hay lecturas en el periodo seleccionado.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  energyReadingsBody.innerHTML =
+    ultimasLecturas
+      .map(
+        (lectura) => `
+          <tr>
+            <td>
+              ${formatoFechaEnergia(
+                lectura.fecha_servidor
+              )}
+            </td>
+
+            <td>
+              ${valorNumerico(
+                lectura.voltaje,
+                1,
+                "V"
+              )}
+            </td>
+
+            <td>
+              ${valorNumerico(
+                lectura.corriente,
+                3,
+                "A"
+              )}
+            </td>
+
+            <td>
+              ${valorNumerico(
+                lectura.potencia,
+                1,
+                "W"
+              )}
+            </td>
+
+            <td>
+              ${valorNumerico(
+                lectura.energia_kwh,
+                3,
+                "kWh"
+              )}
+            </td>
+
+            <td>
+              ${valorNumerico(
+                lectura.frecuencia,
+                1,
+                "Hz"
+              )}
+            </td>
+
+            <td>
+              ${valorNumerico(
+                lectura.factor_potencia,
+                2
+              )}
+            </td>
+          </tr>
+        `
+      )
+      .join("");
+};
+
+const limpiarPanelEnergia = () => {
+  energyDeviceName.textContent = "--";
+  energyDeviceStatus.textContent =
+    "Sin datos";
+
+  energyLastContact.textContent = "--";
+  energyVoltage.textContent = "-- V";
+  energyCurrent.textContent = "-- A";
+  energyPower.textContent = "-- W";
+  energyTotal.textContent = "-- kWh";
+  energyFrequency.textContent = "-- Hz";
+  energyPf.textContent = "--";
+  energyRssi.textContent = "-- dBm";
+
+  energyPeriodConsumption.textContent =
+    "-- kWh";
+
+  energyEstimatedCost.textContent =
+    "B/. --";
+
+  destruirGraficasEnergia();
+
+  if (energyReadingsBody) {
+    energyReadingsBody.innerHTML = `
+      <tr>
+        <td colspan="7">
+          No hay mediciones para mostrar.
+        </td>
+      </tr>
+    `;
+  }
+};
+
+const cargarLecturasEnergia = async () => {
+  if (
+    !energyDeviceSelect ||
+    !energyPeriodSelect
+  ) {
+    return;
+  }
+
+  const dispositivoId =
+    energyDeviceSelect.value;
+
+  const horasPeriodo = Number(
+    energyPeriodSelect.value || 24
+  );
+
+  const dispositivo =
+    dispositivosEnergia.find(
+      (item) =>
+        String(item.id) ===
+        String(dispositivoId)
+    );
+
+  if (!dispositivo) {
+    limpiarPanelEnergia();
+
+    mostrarMensajeEnergia(
+      "Selecciona un dispositivo.",
+      "error"
+    );
+
+    return;
+  }
+
+  mostrarMensajeEnergia(
+    "Cargando mediciones...",
+    "loading"
+  );
+
+  energyDeviceName.textContent =
+    `${dispositivo.nombre_cliente} · ${dispositivo.codigo}`;
+
+  actualizarEstadoDispositivo(
+    dispositivo
+  );
+
+  const fechaDesde = new Date(
+    Date.now() -
+      horasPeriodo * 60 * 60 * 1000
+  ).toISOString();
+
+  try {
+    const lecturas =
+      await obtenerLecturasPaginadas(
+        dispositivo.id,
+        fechaDesde
+      );
+
+    if (lecturas.length === 0) {
+      limpiarPanelEnergia();
+
+      energyDeviceName.textContent =
+        `${dispositivo.nombre_cliente} · ${dispositivo.codigo}`;
+
+      actualizarEstadoDispositivo(
+        dispositivo
+      );
+
+      mostrarMensajeEnergia(
+        "No hay lecturas en el periodo seleccionado.",
+        "error"
+      );
+
+      return;
+    }
+
+    const ultimaLectura =
+      lecturas[lecturas.length - 1];
+
+    energyVoltage.textContent =
+      valorNumerico(
+        ultimaLectura.voltaje,
+        1,
+        "V"
+      );
+
+    energyCurrent.textContent =
+      valorNumerico(
+        ultimaLectura.corriente,
+        3,
+        "A"
+      );
+
+    energyPower.textContent =
+      valorNumerico(
+        ultimaLectura.potencia,
+        1,
+        "W"
+      );
+
+    energyTotal.textContent =
+      valorNumerico(
+        ultimaLectura.energia_kwh,
+        3,
+        "kWh"
+      );
+
+    energyFrequency.textContent =
+      valorNumerico(
+        ultimaLectura.frecuencia,
+        1,
+        "Hz"
+      );
+
+    energyPf.textContent =
+      valorNumerico(
+        ultimaLectura.factor_potencia,
+        2
+      );
+
+    energyRssi.textContent =
+      valorNumerico(
+        ultimaLectura.rssi,
+        0,
+        "dBm"
+      );
+
+    const consumoPeriodo =
+      calcularConsumoPeriodo(lecturas);
+
+    energyPeriodConsumption.textContent =
+      valorNumerico(
+        consumoPeriodo,
+        3,
+        "kWh"
+      );
+
+    const resultadoCosto =
+      await calcularCostoPeriodo(
+        dispositivo,
+        consumoPeriodo,
+        horasPeriodo
+      );
+
+    energyEstimatedCost.textContent =
+      formatoDinero(
+        resultadoCosto.costo
+      );
+
+    renderizarGraficasEnergia(lecturas);
+    renderizarTablaEnergia(lecturas);
+
+    const avisoCosto =
+      resultadoCosto.aproximado
+        ? " El costo utiliza una tarifa aproximada."
+        : "";
+
+    mostrarMensajeEnergia(
+      `Se cargaron ${lecturas.length} lecturas.${avisoCosto}`,
+      "success"
+    );
+  } catch (error) {
+    console.error(error);
+
+    mostrarMensajeEnergia(
+      "No se pudieron cargar las mediciones.",
+      "error"
+    );
+  }
+};
+
+const cargarDispositivosEnergia =
+  async () => {
+    if (!energyDeviceSelect) return;
+
+    mostrarMensajeEnergia(
+      "Cargando dispositivos...",
+      "loading"
+    );
+
+    const { data, error } =
+      await supabaseClient
+        .from("dispositivos_energia")
+        .select(
+          `
+          id,
+          codigo,
+          nombre_cliente,
+          ubicacion,
+          distribuidora,
+          categoria_tarifaria,
+          tarifa_kwh,
+          activo,
+          intervalo_envio_segundos,
+          ultimo_contacto
+          `
+        )
+        .eq("activo", true)
+        .order("nombre_cliente", {
+          ascending: true,
+        });
+
+    if (error) {
+      console.error(error);
+
+      energyDeviceSelect.innerHTML = `
+        <option value="">
+          No se pudieron cargar los dispositivos
+        </option>
+      `;
+
+      mostrarMensajeEnergia(
+        "Error al cargar los dispositivos.",
+        "error"
+      );
+
+      return;
+    }
+
+    dispositivosEnergia = data || [];
+
+    if (dispositivosEnergia.length === 0) {
+      energyDeviceSelect.innerHTML = `
+        <option value="">
+          No hay dispositivos registrados
+        </option>
+      `;
+
+      limpiarPanelEnergia();
+
+      mostrarMensajeEnergia(
+        "No hay dispositivos activos.",
+        "error"
+      );
+
+      return;
+    }
+
+    energyDeviceSelect.innerHTML =
+      dispositivosEnergia
+        .map(
+          (dispositivo) => `
+            <option value="${dispositivo.id}">
+              ${escaparHtml(
+                dispositivo.nombre_cliente
+              )} · ${escaparHtml(
+                dispositivo.codigo
+              )}
+            </option>
+          `
+        )
+        .join("");
+
+    await cargarLecturasEnergia();
+  };
+
+/* ==============================
+   EVENTOS DEL MONITOREO
+============================== */
+
+if (energyDeviceSelect) {
+  energyDeviceSelect.addEventListener(
+    "change",
+    cargarLecturasEnergia
+  );
+}
+
+if (energyPeriodSelect) {
+  energyPeriodSelect.addEventListener(
+    "change",
+    cargarLecturasEnergia
+  );
+}
+
+if (energyRefreshBtn) {
+  energyRefreshBtn.addEventListener(
+    "click",
+    cargarDispositivosEnergia
+  );
+}
 /* ==============================
    INICIO
 ============================== */
